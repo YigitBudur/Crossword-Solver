@@ -316,98 +316,112 @@ namespace CrosswordSolver
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list3Letter.Length);
-                    while (list3Letter[number] == null)
+                    string[] shadowArray = new string[2];
+                    Array.Copy(list3Letter, shadowArray, list3Letter.Length);
+                    while (shadowArray[number] == null)
                     {
-                        number = rnd.Next(0, list3Letter.Length);
-                        if (IsItEmpty(list3Letter)) { ResetThePuzzle(); }
+                        number = rnd.Next(0, shadowArray.Length);
                     }
-                    string saveBeforeDeleting = list3Letter[number];
-                    list3Letter[number] = null;
+                    string saveBeforeDeleting = shadowArray[number];
+                    shadowArray[number] = null;
                     return saveBeforeDeleting;
                 } else
                 if (a == 4)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list4Letter.Length);
-                    while (list4Letter[number] == null)
+                    string[] shadowArray = new string[14];
+                    Array.Copy(list4Letter, shadowArray, list4Letter.Length);
+                    while (shadowArray[number] == null)
                     {
-                        number = rnd.Next(0, list4Letter.Length); // program gets stuck when the array is empty
-                        if (IsItEmpty(list4Letter)) { ResetThePuzzle(); }
+                        number = rnd.Next(0, shadowArray.Length);
                     }
-                    string saveBeforeDeleting = list4Letter[number];
-                    list4Letter[number] = null;
+                    string saveBeforeDeleting = shadowArray[number];
+                    shadowArray[number] = null;
                     return saveBeforeDeleting;
                 } else
                 if (a == 5)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list5Letter.Length);
-                    while (list5Letter[number] == null)
+                    string[] shadowArray = new string[7];
+                    Array.Copy(list5Letter, shadowArray, list5Letter.Length);
+                    while (shadowArray[number] == null)
                     {
-                        number = rnd.Next(0, list5Letter.Length);
+                        number = rnd.Next(0, shadowArray.Length);
                     }
-                    string saveBeforeDeleting = list5Letter[number];
-                    list5Letter[number] = null;
+                    string saveBeforeDeleting = shadowArray[number];
+                    shadowArray[number] = null;
                     return saveBeforeDeleting;
                 } else
                 if (a == 6)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list6Letter.Length);
-                    while (list6Letter[number] == null)
+                    string[] shadowArray = new string[16];
+                    Array.Copy(list6Letter, shadowArray, list6Letter.Length);
+                    while (shadowArray[number] == null)
                     {
-                        number = rnd.Next(0, list6Letter.Length);
+                        number = rnd.Next(0, shadowArray.Length);
                     }
-                    string saveBeforeDeleting = list6Letter[number];
-                    list6Letter[number] = null;
+                    string saveBeforeDeleting = shadowArray[number];
+                    shadowArray[number] = null;
                     return saveBeforeDeleting;
                 } else
                 if (a == 7)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list7Letter.Length);
-                    while (list7Letter[number] == null)
-                    {                        
-                        number = rnd.Next(0, list7Letter.Length);
+                    string[] shadowArray = new string[10];
+                    Array.Copy(list7Letter, shadowArray, list7Letter.Length);
+                    while (shadowArray[number] == null)
+                    {
+                        number = rnd.Next(0, shadowArray.Length);
                     }
-                    string saveBeforeDeleting = list7Letter[number];
-                    list7Letter[number] = null;
+                    string saveBeforeDeleting = shadowArray[number];
+                    shadowArray[number] = null;
                     return saveBeforeDeleting;
                 } else
                 if (a == 8)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list8Letter.Length);
-                    while (list8Letter[number] == null)
+                    string[] shadowArray = new string[6];
+                    Array.Copy(list8Letter, shadowArray, list8Letter.Length);
+                    while (shadowArray[number] == null)
                     {
-                        number = rnd.Next(0, list8Letter.Length);
+                        number = rnd.Next(0, shadowArray.Length);
                     }
-                    string saveBeforeDeleting = list8Letter[number];
-                    list8Letter[number] = null;
+                    string saveBeforeDeleting = shadowArray[number];
+                    shadowArray[number] = null;
                     return saveBeforeDeleting;
                 } else
                 if (a == 9)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list9Letter.Length);
-                    while (list9Letter[number] == null)
-                    {                        
-                        number = rnd.Next(0, list9Letter.Length);
+                    string[] shadowArray = new string[2];
+                    Array.Copy(list9Letter, shadowArray, list9Letter.Length);
+                    while (shadowArray[number] == null)
+                    {
+                        number = rnd.Next(0, shadowArray.Length);
                     }
-                    string saveBeforeDeleting = list9Letter[number];
-                    list9Letter[number] = null;
+                    string saveBeforeDeleting = shadowArray[number];
+                    shadowArray[number] = null;
                     return saveBeforeDeleting;
                 } else
                 if (a == 10)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list10Letter.Length);
-                    while (list10Letter[number] == null)
-                    {                        
-                        number = rnd.Next(0, list10Letter.Length);
+                    string[] shadowArray = new string[2];
+                    Array.Copy(list10Letter, shadowArray, list10Letter.Length);
+                    while (shadowArray[number] == null)
+                    {
+                        number = rnd.Next(0, shadowArray.Length);
                     }
-                    string saveBeforeDeleting = list10Letter[number];
-                    list10Letter[number] = null;
+                    string saveBeforeDeleting = shadowArray[number];
+                    shadowArray[number] = null;
                     return saveBeforeDeleting;
                 }
                 else return "";
@@ -720,6 +734,7 @@ namespace CrosswordSolver
             {
                 checkX = 0;
                 checkY = 0; // go to (0, 0)               
+                Console.CursorLeft = checkX;
                 Console.CursorTop = checkY;
                 char letter = read1Letter(Console.CursorLeft, Console.CursorTop);
                 int vSpace = GetWordSpaceVertical(Console.CursorLeft, Console.CursorTop);
@@ -740,10 +755,104 @@ namespace CrosswordSolver
             #endregion
 
             #region Check the (0, 1) letter and type a horizontal word with it
-            { 
+            {
+                checkX = 0;
+                checkY = 1; // go to (0, 0)
+                Console.CursorLeft = checkX;
+                Console.CursorTop = checkY;
                 char letter = read1Letter(Console.CursorLeft, Console.CursorTop);
+                // Get horizontal space if theres not a "@" in the following 3 characters
+                int hLength = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                string pickedWord = PickWord(hLength);
+
+                int tryN = 0;
+                while ((pickedWord.ElementAt(0) != letter) && tryN < 20)
+                {
+                    pickedWord = PickWord(hLength);
+                    if (tryN >= 19)
+                    {
+                        goto start;
+                    }
+                }
+
+                // Re-write the lineN[] array with the hWord included
+                lineN[checkY] = pickedWord + lineN[checkY].Substring(hLength, 15 - hLength);
+                // Assign the re-rewritten word to a variable
+                string asd = lineN[checkY];
+                // Type the hWord to the current x,y
+                Console.WriteLine(pickedWord);
+                checkY++;
+                System.Threading.Thread.Sleep(200);
             }
             #endregion
+
+            #region Check the (0, 2) letter and type a horizontal word with it
+            {
+                checkX = 0;
+                checkY = 2; // go to (0, 0)
+                Console.CursorLeft = checkX;
+                Console.CursorTop = checkY;
+                char letter = read1Letter(Console.CursorLeft, Console.CursorTop);
+                // Get horizontal space if theres not a "@" in the following 3 characters
+                int hLength = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                string pickedWord = PickWord(hLength);
+
+                int tryN = 0;
+                while ((pickedWord.ElementAt(0) != letter) && tryN < 20)
+                {
+                    pickedWord = PickWord(hLength);
+                    if (tryN >= 19)
+                    {
+                        goto start;
+                    }
+                }
+
+                // Re-write the lineN[] array with the hWord included
+                lineN[checkY] = pickedWord + lineN[checkY].Substring(hLength, 15 - hLength);
+                // Assign the re-rewritten word to a variable
+                string asd = lineN[checkY];
+                // Type the hWord to the current x,y
+                Console.WriteLine(pickedWord);
+                checkY++;
+                System.Threading.Thread.Sleep(200);
+            }
+            #endregion
+
+            #region Check the (0, 3) letter and type a horizontal word with it
+            {
+                checkX = 0;
+                checkY = 3; // go to (0, 0)
+                Console.CursorLeft = checkX;
+                Console.CursorTop = checkY;
+                char letter = read1Letter(Console.CursorLeft, Console.CursorTop);
+                // Get horizontal space if theres not a "@" in the following 3 characters
+                int hLength = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                string pickedWord = PickWord(hLength);
+
+                int tryN = 0;
+                while ((pickedWord.ElementAt(0) != letter) && tryN < 20)
+                {
+                    pickedWord = PickWord(hLength);
+                    if (tryN >= 19)
+                    {
+                        goto start;
+                    }
+                }
+
+                // Re-write the lineN[] array with the hWord included
+                lineN[checkY] = pickedWord + lineN[checkY].Substring(hLength, 15 - hLength);
+                // Assign the re-rewritten word to a variable
+                string asd = lineN[checkY];
+                // Type the hWord to the current x,y
+                Console.WriteLine(pickedWord);
+                checkY++;
+                System.Threading.Thread.Sleep(200);
+            }
+            #endregion
+
 
             #endregion Auto Solver NEW ^^^^^^^^^^
 
