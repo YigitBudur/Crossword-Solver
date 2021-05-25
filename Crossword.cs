@@ -10,16 +10,19 @@ namespace CrosswordSolver
     {
         static void Main(string[] args)
         {
+            var watch = new System.Diagnostics.Stopwatch();
+            watch.Start(); // to calculate the time it took to solve the Puzzle
+
             Console.SetWindowSize(40, 24);           // Console.SetWindowSize(15, 24);
-            int thisNumberOfTimes = 0;
-            int wordLength;
+            int thisNumberOfTimes = 0; // to calculate how many iterations been done
+
             int checkX = 0; // Karakterleri yerleştirme ve okumada kullanılacak
             int checkY = 0; // Karakterleri yerleştirme ve okumada kullanılacak
 
             int solveSpeed = 0;
-            int wLengthStorage = 0;
-            //string storedWord = "";
 
+            // Puzzle Alanını Oluştur 
+            #region [ Puzzle Alanı lineN[] ] 
             // Puzzle Alanını Oluştur 
             #region [ Puzzle Alanı lineN[] ] 
             Console.WriteLine("+++++++@+++++++");  // 1.  Satır
@@ -39,33 +42,22 @@ namespace CrosswordSolver
             Console.WriteLine("+++++++@+++++++");  // 15. Satır 
 
             string[] lineN = new string[15]; //15
-            lineN[0]  = "+++++++@+++++++"; // 1.  Satır
-            lineN[1]  = "++++++@++++++@+"; // 2.  Satır
-            lineN[2]  = "+++++++@+++++++"; // 3.  Satır
-            lineN[3]  = "++++++@++++++@+"; // 4.  Satır
-            lineN[4]  = "@+@++++@+++++@+"; // 5.  Satır
-            lineN[5]  = "++++++++@+@++++"; // 6.  Satır
-            lineN[6]  = "+@+@+@+++++++++"; // 7.  Satır
-            lineN[7]  = "++++@+@+@+@++++"; // 8.  Satır
-            lineN[8]  = "+++++++++@+@+@+"; // 9.  Satır
-            lineN[9]  = "++++@+@++++++++"; // 10. Satır
+            lineN[0] = "+++++++@+++++++"; // 1.  Satır
+            lineN[1] = "++++++@++++++@+"; // 2.  Satır
+            lineN[2] = "+++++++@+++++++"; // 3.  Satır
+            lineN[3] = "++++++@++++++@+"; // 4.  Satır
+            lineN[4] = "@+@++++@+++++@+"; // 5.  Satır
+            lineN[5] = "++++++++@+@++++"; // 6.  Satır
+            lineN[6] = "+@+@+@+++++++++"; // 7.  Satır
+            lineN[7] = "++++@+@+@+@++++"; // 8.  Satır
+            lineN[8] = "+++++++++@+@+@+"; // 9.  Satır
+            lineN[9] = "++++@+@++++++++"; // 10. Satır
             lineN[10] = "@++++++@++++@+@"; // 11. Satır
             lineN[11] = "+@++++++@++++++"; // 12. Satır
             lineN[12] = "+++++++@+++++++"; // 13. Satır
             lineN[13] = "+@++++++@++++++"; // 14. Satır
             lineN[14] = "+++++++@+++++++"; // 15. Satır 
             #endregion
-
-            
-            #region [ List Last Indexes ]
-            int list3LastIndex = 0;
-            int list4LastIndex = 0;
-            int list5LastIndex = 0;
-            int list6LastIndex = 0;
-            int list7LastIndex = 0;
-            int list8LastIndex = 0;
-            int list9LastIndex = 0;
-            int list10LastIndex = 0;
             #endregion
 
             #region [ listXLetter ]
@@ -145,7 +137,7 @@ namespace CrosswordSolver
             list10Letter[1] = "VIRTUOSITY";
             #endregion
 
-            static bool IsItEmpty(string[] myStringArray)
+            bool IsItEmpty(string[] myStringArray)
             {
                 int i = 0;
                 int emptyArrays = 0;
@@ -165,43 +157,7 @@ namespace CrosswordSolver
                 
                 //Source of this method: "https://www.codeproject.com/Questions/237141/how-to-check-string-array-is-Null-or-Empty"
             }
-
-            void increaseLastIndex(int index)
-            {
-                if (index == 3)
-                {
-                    list3LastIndex++;
-                }
-                if (index == 4)
-                {
-                    list4LastIndex++;
-                }
-                if (index == 5)
-                {
-                    list5LastIndex++;
-                }
-                if (index == 6)
-                {
-                    list6LastIndex++;
-                }
-                if (index == 7)
-                {
-                    list7LastIndex++;
-                }
-                if (index == 8)
-                {
-                    list8LastIndex++;
-                }
-                if (index == 9)
-                {
-                    list9LastIndex++;
-                }
-                if (index == 10)
-                {
-                    list10LastIndex++;
-                }
-               
-            }
+          
 
             #region [ GetWordSpaceHorizontal ] - Bulunulan noktadan sonraki "@" karakterine kadar olan sağa doğru yatay boşluğu hesaplar ve döndürür.
             int GetWordSpaceHorizontal(int checkX, int checkY)
@@ -263,8 +219,8 @@ namespace CrosswordSolver
                     checkY++;
                     System.Threading.Thread.Sleep(solveSpeed);
                 }
-                return "";
                 checkY = Console.CursorTop;
+                return "";                
             }
             #endregion
 
@@ -570,6 +526,11 @@ namespace CrosswordSolver
             {
                 Console.Clear();
                 Console.SetCursorPosition(0, 0);
+                checkX = 0;
+                checkY = 0;
+                // Re-write the Puzzle
+                // Puzzle Alanını Oluştur 
+                #region [ Puzzle Alanı lineN[] ] 
                 Console.WriteLine("+++++++@+++++++");  // 1.  Satır
                 Console.WriteLine("++++++@++++++@+");  // 2.  Satır
                 Console.WriteLine("+++++++@+++++++");  // 3.  Satır
@@ -586,7 +547,7 @@ namespace CrosswordSolver
                 Console.WriteLine("+@++++++@++++++");  // 14. Satır
                 Console.WriteLine("+++++++@+++++++");  // 15. Satır 
 
-                //string[] lineN = new string[15]; //15
+                string[] lineN = new string[15]; //15
                 lineN[0] = "+++++++@+++++++"; // 1.  Satır
                 lineN[1] = "++++++@++++++@+"; // 2.  Satır
                 lineN[2] = "+++++++@+++++++"; // 3.  Satır
@@ -601,7 +562,8 @@ namespace CrosswordSolver
                 lineN[11] = "+@++++++@++++++"; // 12. Satır
                 lineN[12] = "+++++++@+++++++"; // 13. Satır
                 lineN[13] = "+@++++++@++++++"; // 14. Satır
-                lineN[14] = "+++++++@+++++++"; // 15. Satır
+                lineN[14] = "+++++++@+++++++"; // 15. Satır 
+                #endregion
 
                 //string[] list3Letter = new string[2];
                 list3Letter[0] = "GNU";
@@ -702,7 +664,7 @@ namespace CrosswordSolver
             checkX = Console.CursorLeft;
             checkY = Console.CursorTop;
             #region PART [1] START
-
+            
             #region Type the first word at (0,0)                
             if ((Line.Substring(checkX, checkX) != "@") && (Line.Substring(checkX, checkX + 2) != "@"))
             {
@@ -711,7 +673,8 @@ namespace CrosswordSolver
                 // Pick a word according to that Length gotten from the line above
                 string hWord = PickWord(hLength);
                 // Re-write the lineN[] array with the hWord included
-                lineN[checkY] = hWord + lineN[checkY].Substring(hLength, 15 - hLength);
+                string restOfTheLine = lineN[checkY].Substring(hLength, 15 - hLength);
+                lineN[checkY] = hWord + restOfTheLine;
                 // Assign the re-rewritten word to a variable
                 string asd = lineN[checkY];
                 // Type the hWord to the current x,y
@@ -749,7 +712,7 @@ namespace CrosswordSolver
             }
             #endregion
 
-            #region Check the (0, 1) letter and type a horizontal word with it
+            #region Check the (0, 1) letter and type a HORIZONTAL word with it
             {
                 checkX = 0;
                 checkY = 1; // go to (0, 0)
@@ -773,7 +736,8 @@ namespace CrosswordSolver
                 }
 
                 // Re-write the lineN[] array with the hWord included
-                lineN[checkY] = pickedWord + lineN[checkY].Substring(hLength, 15 - hLength);
+                string restOfTheLine = lineN[checkY].Substring(hLength, 15 - hLength);
+                lineN[checkY] = pickedWord + restOfTheLine;
                 // Assign the re-rewritten word to a variable
                 string asd = lineN[checkY];
                 // Type the hWord to the current x,y
@@ -783,7 +747,7 @@ namespace CrosswordSolver
             }
             #endregion
 
-            #region Check the (0, 2) letter and type a horizontal word with it
+            #region Check the (0, 2) letter and type a HORIZONTAL word with it
             {
                 checkX = 0;
                 checkY = 2; // go to (0, 0)
@@ -807,7 +771,8 @@ namespace CrosswordSolver
                 }
 
                 // Re-write the lineN[] array with the hWord included
-                lineN[checkY] = pickedWord + lineN[checkY].Substring(hLength, 15 - hLength);
+                string restOfTheLine = lineN[checkY].Substring(hLength, 15 - hLength);
+                lineN[checkY] = pickedWord + restOfTheLine;
                 // Assign the re-rewritten word to a variable
                 string asd = lineN[checkY];
                 // Type the hWord to the current x,y
@@ -817,7 +782,7 @@ namespace CrosswordSolver
             }
             #endregion
 
-            #region Check the (0, 3) letter and type a horizontal word with it
+            #region Check the (0, 3) letter and type a HORIZONTAL word with it
             {
                 checkX = 0;
                 checkY = 3; // go to (0, 0)
@@ -840,7 +805,8 @@ namespace CrosswordSolver
                 }
 
                 // Re-write the lineN[] array with the hWord included
-                lineN[checkY] = pickedWord + lineN[checkY].Substring(hLength, 15 - hLength);
+                string restOfTheLine = lineN[checkY].Substring(hLength, 15 - hLength);
+                lineN[checkY] = pickedWord + restOfTheLine;
                 // Assign the re-rewritten word to a variable
                 string asd = lineN[checkY];
                 // Type the hWord to the current x,y
@@ -849,12 +815,13 @@ namespace CrosswordSolver
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
+            
             #endregion PART [1] END
 
-            #region PART [2]
+            #region PART [2] START
 
             #region Type the vertical word created at (1,0) (aiming to pick "MODERN" by chance)
-            { 
+            {
                 checkX = 1;
                 checkY = 0; // go to (0, 0)
                 Console.SetCursorPosition(checkX, checkY);
@@ -869,55 +836,103 @@ namespace CrosswordSolver
                 int vSpace = GetWordSpaceVertical(checkX, checkY);
                 // Pick a word according to that Length gotten from the line above
                 Console.CursorLeft = 1;
-                Console.CursorTop = 0;    
+                Console.CursorTop = 0;
                 string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(1);
+                char let3 = pickedWord.ElementAt(2);
+                char let4 = pickedWord.ElementAt(3);
 
                 int tryN = 0; 
                 if (pickedWord != null)
                 { 
-                    while ((pickedWord.ElementAt(0) != letter1) && (pickedWord.ElementAt(1) != letter2) && (pickedWord.ElementAt(2) != letter3) && (pickedWord.ElementAt(3) != letter4) && tryN < 20)
-                    {
-                        if ((pickedWord.ElementAt(0) == letter1) && (pickedWord.ElementAt(1) == letter2) && (pickedWord.ElementAt(2) == letter3) && (pickedWord.ElementAt(3) == letter4))
-                        {
-                            TypeVertically(pickedWord);
-                            // we cant detect 4 pre known letter words
-                            goto exit;
-                            break;
-                        }
+                    while ((let1 != letter1) && (let2 != letter2) && (let3 != letter3) && (let4 != letter4) && tryN < 20) // If "correct word" is not picked, pick another word
+                    {                        
                         pickedWord = PickWord(vSpace);
+                        let1 = pickedWord.ElementAt(0);
+                        let2 = pickedWord.ElementAt(1);
+                        let3 = pickedWord.ElementAt(2);
+                        let4 = pickedWord.ElementAt(3);
+                        if (tryN >= 19)
+                        {
+                            goto start;
+                        }
+                        tryN++;
+                    } 
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next1;
+                    }
+                    goto start;
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+            #endregion
+            next1:
+            #region Type the vertical word created at (3,0) (aiming to pick "NATIVE" by chance)
+            {
+                checkX = 3;
+                checkY = 0; // go to (0, 0)
+                Console.SetCursorPosition(checkX, checkY);
+
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 1);
+                char letter3 = read1Letter(Console.CursorLeft, Console.CursorTop + 1);
+                char letter4 = read1Letter(Console.CursorLeft, Console.CursorTop + 1);
+                // Get vertical space 
+                Console.CursorLeft = 3;
+                Console.CursorTop = 0;
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 3;
+                Console.CursorTop = 0;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0); 
+                char let2 = pickedWord.ElementAt(1); 
+                char let3 = pickedWord.ElementAt(2); 
+                char let4 = pickedWord.ElementAt(3); 
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    while ((let1 != letter1) && (let2 != letter2) && (let3 != letter3) && (let4 != letter4) && tryN < 20) // If "correct word" is not picked, pick another word
+                    {
+                        pickedWord = PickWord(vSpace);
+                        let1 = pickedWord.ElementAt(0); 
+                        let2 = pickedWord.ElementAt(1); 
+                        let3 = pickedWord.ElementAt(2); 
+                        let4 = pickedWord.ElementAt(3); 
                         if (tryN >= 19)
                         {
                             goto start;
                         }
                         tryN++;
                     }
-                    TypeVertically(pickedWord);
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next2;
+                    }
                     goto start;
-                } else pickedWord = PickWord(vSpace);
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
                 System.Threading.Thread.Sleep(solveSpeed);
-
-                 
-
             }
+        #endregion
+        next2:
+        #endregion Auto Solver NEW ^^^^^^^^
 
-            #endregion
+        
 
-            #endregion Auto Solver NEW ^^^^^^^^
-
-            /* 
-            string b = ReadVertically(1, 0);
-            if (b != "")
-            {
-                Console.SetCursorPosition(0, 16);
-                Console.WriteLine(b);
-            }
-            */
-            // only type horizontally if theres 3 char space for a word
-
-            exit:
+        exit:
             Console.CursorTop = 16;
-            Console.WriteLine("Puzzle Cozuldu.");
-            System.Threading.Thread.Sleep(9000);
+            watch.Stop();
+            Console.WriteLine($"Puzzle {watch.ElapsedMilliseconds} ms'de ve {thisNumberOfTimes} Denemede Cozuldu.");
+            System.Threading.Thread.Sleep(900000);
             Console.ReadLine(); // Kapanmak için tuş girişini bekle            
 
         }
