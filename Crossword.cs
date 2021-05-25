@@ -16,8 +16,9 @@ namespace CrosswordSolver
             int checkX = 0; // Karakterleri yerleştirme ve okumada kullanılacak
             int checkY = 0; // Karakterleri yerleştirme ve okumada kullanılacak
 
+            int solveSpeed = 0;
             int wLengthStorage = 0;
-            string storedWord = "";
+            //string storedWord = "";
 
             // Puzzle Alanını Oluştur 
             #region [ Puzzle Alanı lineN[] ] 
@@ -215,13 +216,14 @@ namespace CrosswordSolver
             #region [ GetWordSpaceVertical ] - Bulunulan noktadan sonraki "@" karakterine kadar olan aşağı doğru dikey boşluğu hesaplar ve döndürür.
             int GetWordSpaceVertical(int checkX, int checkY)
             {
+                string storedWord = "";
                 Console.SetCursorPosition(checkX, checkY);
                 string Line = lineN[checkY];
                 for (var i = 0; i < 10; i++)
                 {
-                    if (Line.Substring(checkX, checkX + 1) != "@")
+                    if (Line.Substring(checkX, 1) != "@") // this was>  if (Line.Substring(checkX, checkX + 1) != "@")
                     {
-                        storedWord = storedWord + Line.Substring(checkX, checkX + 1);
+                        storedWord = storedWord + Line.Substring(checkX,  1); // this was Line.Substring(checkX, checkX + 1);  
                         Console.SetCursorPosition(checkX, checkY + i);
                         if (i == 0)
                         {
@@ -239,7 +241,7 @@ namespace CrosswordSolver
             {
                 int wordLength = Word.Length; // added this after
                 for (int i = 0; i < wordLength; i++)
-                {
+                {                    
                     #region To use later on
                     // string d1 = lineN[checkY].Substring(0, 1 + i);
                     // string d2 = lineN[checkY].Substring(i + 1, 14 - (1 + i));
@@ -259,9 +261,10 @@ namespace CrosswordSolver
                         Console.SetCursorPosition(checkX, checkY);
                     } else { Console.SetCursorPosition(checkX, checkY); }
                     checkY++;
-                    System.Threading.Thread.Sleep(200);
+                    System.Threading.Thread.Sleep(solveSpeed);
                 }
                 return "";
+                checkY = Console.CursorTop;
             }
             #endregion
 
@@ -684,33 +687,23 @@ namespace CrosswordSolver
             {
                 Console.SetCursorPosition(checkX, checkY);
                 string Line = lineN[checkY];
-                char readLetter = char.Parse(Line.Substring(checkX, checkX + 1));
+                char readLetter = char.Parse(Line.Substring(checkX, 1));
                 Console.SetCursorPosition(checkX, checkY);               
                 return readLetter; 
             }
             #endregion
 
-            //int pStart = stringInput.IndexOf("{"); // Parantez başlangıcının indexini al
-            //int pEnd = stringInput.IndexOf("}");   // Parantez sonunun indexini al
-
-            //stringOutput = stringInput.Substring(pStart+1, pEnd-pStart-1);
-            //Console.WriteLine("Parantez içi: '"+stringOutput+"'");
-            //Console.SetCursorPosition(0, 0);
-
-            /* 
-            int p1 = GetWordSpaceHorizontal(0, 0);
-            Console.WriteLine(PickWord(p1));
-            */
-
-
-            System.Threading.Thread.Sleep(100);
+            System.Threading.Thread.Sleep(solveSpeed);
             #region Auto Solver NEW
+            start:
+            ResetThePuzzle();
             Console.SetCursorPosition(0, 0);
             string Line = lineN[checkY];
             checkX = Console.CursorLeft;
             checkY = Console.CursorTop;
-            #region Type the first word at (0,0)    
-            start:
+            #region PART [1] START
+
+            #region Type the first word at (0,0)                
             if ((Line.Substring(checkX, checkX) != "@") && (Line.Substring(checkX, checkX + 2) != "@"))
             {
                 // Get horizontal space if theres not a "@" in the following 3 characters
@@ -724,14 +717,12 @@ namespace CrosswordSolver
                 // Type the hWord to the current x,y
                 Console.WriteLine(hWord);
                 checkY++;
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
 
-
-
             #region Check the First Vertical Letter and pick a word that starts with that letter to type with it
-            {
+            {               
                 checkX = 0;
                 checkY = 0; // go to (0, 0)               
                 Console.CursorLeft = checkX;
@@ -741,16 +732,20 @@ namespace CrosswordSolver
                 string pickedWord = PickWord(vSpace);
 
                 int tryN = 0;
-                while ((pickedWord.ElementAt(0) != letter) && tryN < 20)
+                if (pickedWord != "" && pickedWord != null)
                 {
-                    pickedWord = PickWord(vSpace);
-                    if (tryN >= 19)
+                    while ((pickedWord.ElementAt(0) != letter) && tryN < 20)
                     {
-                        goto start;
+                        pickedWord = PickWord(vSpace);
+                        if (tryN >= 19)
+                        {
+                            goto start;
+                        }
+                        tryN++;
                     }
                 }
                 TypeVertically(pickedWord);
-                System.Threading.Thread.Sleep(1);
+                System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
 
@@ -774,6 +769,7 @@ namespace CrosswordSolver
                     {
                         goto start;
                     }
+                    tryN++;
                 }
 
                 // Re-write the lineN[] array with the hWord included
@@ -783,7 +779,7 @@ namespace CrosswordSolver
                 // Type the hWord to the current x,y
                 Console.WriteLine(pickedWord);
                 checkY++;
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
 
@@ -807,6 +803,7 @@ namespace CrosswordSolver
                     {
                         goto start;
                     }
+                    tryN++;
                 }
 
                 // Re-write the lineN[] array with the hWord included
@@ -816,7 +813,7 @@ namespace CrosswordSolver
                 // Type the hWord to the current x,y
                 Console.WriteLine(pickedWord);
                 checkY++;
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
 
@@ -849,150 +846,63 @@ namespace CrosswordSolver
                 // Type the hWord to the current x,y
                 Console.WriteLine(pickedWord);
                 checkY++;
-                System.Threading.Thread.Sleep(200);
+                System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
+            #endregion PART [1] END
 
+            #region PART [2]
 
-            #endregion Auto Solver NEW ^^^^^^^^^^
+            #region Type the vertical word created at (1,0) (aiming to pick "MODERN" by chance)
+            { 
+                checkX = 1;
+                checkY = 0; // go to (0, 0)
+                Console.SetCursorPosition(checkX, checkY);
+            
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop+1);
+                char letter3 = read1Letter(Console.CursorLeft, Console.CursorTop+1);
+                char letter4 = read1Letter(Console.CursorLeft, Console.CursorTop+1);
+                // Get vertical space 
+                Console.CursorLeft = 1;
+                Console.CursorTop = 0;           
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 1;
+                Console.CursorTop = 0;    
+                string pickedWord = PickWord(vSpace);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-            #region Auto Solver (Not Working)
-            /* 
-            Console.SetCursorPosition(0, 0);
-            for (int a = 0; a < 1; a++)
-            {
-                string Line = lineN[checkY];
-                checkX = Console.CursorLeft;
-                checkY = Console.CursorTop;
-                
-                
-
-                for (int a3 = 0; a < 4; a++)
+                int tryN = 0; 
+                if (pickedWord != null)
                 { 
-                    if ((Line.Substring(checkX, checkX) != "@") && (Line.Substring(checkX, checkX + 2) != "@"))
+                    while ((pickedWord.ElementAt(0) != letter1) && (pickedWord.ElementAt(1) != letter2) && (pickedWord.ElementAt(2) != letter3) && (pickedWord.ElementAt(3) != letter4) && tryN < 20)
                     {
-                        int hLength = GetWordSpaceHorizontal(checkX, checkY);
-                        string hWord = PickWord(hLength);
-                        lineN[checkY] = hWord + lineN[checkY].Substring(hLength, 15-hLength);
-                        string asd = lineN[checkY];
-                        Console.WriteLine(hWord);
-                        checkY++;
-                    }
-                }
-                checkY = 0;
-                Console.CursorTop = 0;
-
-                for (int a2 = 0; a < 1; a++)
-                {                   
-                    string vWord = ReadVertically(checkX, checkY);
-                    //int vWordLength = vWord.Length;
-                    int vWordLength = 4;
-                    string checkedWord = CheckWordInOrder(vWordLength);
-                    while (String.Compare(vWord, checkedWord) != 0)
-                    {                      
-                        checkedWord = CheckWordInOrder(vWordLength);              
-                        if (checkedWord == "WordNotFound")
+                        if ((pickedWord.ElementAt(0) == letter1) && (pickedWord.ElementAt(1) == letter2) && (pickedWord.ElementAt(2) == letter3) && (pickedWord.ElementAt(3) == letter4))
                         {
-                            //ResetThePuzzle();
-                            //goto restart;
+                            TypeVertically(pickedWord);
+                            // we cant detect 4 pre known letter words
+                            goto exit;
+                            break;
                         }
-                    }  
-                    
-                    if (String.Compare(vWord, checkedWord) == 0)
-                    {
-                        checkY = 1;
-                        Console.CursorLeft = 1;
+                        pickedWord = PickWord(vSpace);
+                        if (tryN >= 19)
+                        {
+                            goto start;
+                        }
+                        tryN++;
                     }
-                   
-                    
-                }
+                    TypeVertically(pickedWord);
+                    goto start;
+                } else pickedWord = PickWord(vSpace);
+                System.Threading.Thread.Sleep(solveSpeed);
 
-                
+                 
+
             }
-            // type a method that picks a word from the given string
-            */
+
             #endregion
 
-            #region [ Semi Auto Solver ]
-            /*
-            Console.CursorTop = 0;
-            System.Threading.Thread.Sleep(200);
-            Console.WriteLine("AMENITY");
-
-            System.Threading.Thread.Sleep(200);
-            Console.WriteLine("POMACE");
-
-            System.Threading.Thread.Sleep(200);
-            Console.WriteLine("EDITING");
-
-            System.Threading.Thread.Sleep(200);
-            Console.WriteLine("RETINA");
-
-            System.Threading.Thread.Sleep(200);
-            Console.CursorTop  = 4;
-            Console.CursorLeft = 1;
-            TypeVerticallySemi("RN");
-
-            System.Threading.Thread.Sleep(200);
-            Console.CursorTop = 4;
-            Console.CursorLeft = 3;
-            TypeVerticallySemi("VE");
-
-            System.Threading.Thread.Sleep(200);
-            Console.CursorTop = 4;
-            Console.CursorLeft = 4;
-            TypeVerticallySemi("ESS");
-
-            System.Threading.Thread.Sleep(200);
-            Console.CursorTop = 4;
-            Console.CursorLeft = 4;
-            Console.WriteLine("ENT");
-
-            System.Threading.Thread.Sleep(200);
-            Console.CursorTop = 5;
-            Console.CursorLeft = 0;
-            Console.WriteLine("INVESTOR");
-
-            System.Threading.Thread.Sleep(200);
-            Console.CursorTop = 6;
-            Console.CursorLeft = 0;
-            TypeVerticallySemi("VORY");
-
-            System.Threading.Thread.Sleep(200);
-            Console.CursorTop = 7;
-            Console.CursorLeft = 1;
-            Console.WriteLine("ARS");
-
-            System.Threading.Thread.Sleep(200);
-            Console.CursorTop = 5;
-            Console.CursorLeft = 2;
-            TypeVerticallySemi("VIRTUOSITY");
-
-            System.Threading.Thread.Sleep(200);
-            Console.CursorTop = 5;
-            Console.CursorLeft = 2;
-            TypeVerticallySemi("SURVIVAL");
-
-            System.Threading.Thread.Sleep(200);
-            Console.CursorTop = 10;
-            Console.CursorLeft = 1;
-            Console.WriteLine("NOVELS");
-            */
-            #endregion
-
+            #endregion Auto Solver NEW ^^^^^^^^
 
             /* 
             string b = ReadVertically(1, 0);
@@ -1004,14 +914,16 @@ namespace CrosswordSolver
             */
             // only type horizontally if theres 3 char space for a word
 
-            System.Threading.Thread.Sleep(1);
-            //Console.WriteLine("bitti.");
+            exit:
+            Console.CursorTop = 16;
+            Console.WriteLine("Puzzle Cozuldu.");
+            System.Threading.Thread.Sleep(9000);
             Console.ReadLine(); // Kapanmak için tuş girişini bekle            
 
         }
     }
 }
 
-
+#endregion
 
 // Yiğit Budur (120444012) Bilgi Üniversitesi
