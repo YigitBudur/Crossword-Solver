@@ -19,7 +19,7 @@ namespace CrosswordSolver
             int checkX = 0; // Karakterleri yerleştirme ve okumada kullanılacak
             int checkY = 0; // Karakterleri yerleştirme ve okumada kullanılacak
 
-            int solveSpeed = 1;
+            int solveSpeed = 0;
 
             // Puzzle Alanını Oluştur 
             #region [ Puzzle Alanı lineN[] ] 
@@ -278,7 +278,7 @@ namespace CrosswordSolver
                     Random rnd = new Random();
                     int number = rnd.Next(0, list3Letter.Length);
                     string[] shadowArray = new string[2];
-                    Array.Copy(list3Letter, shadowArray, list3Letter.Length);
+                    System.Array.Copy(list3Letter, shadowArray, list3Letter.Length);
                     while (shadowArray[number] == null)
                     {
                         number = rnd.Next(0, shadowArray.Length);
@@ -286,13 +286,13 @@ namespace CrosswordSolver
                     string saveBeforeDeleting = shadowArray[number];
                     shadowArray[number] = null;
                     return saveBeforeDeleting;
-                } else
+                } 
                 if (a == 4)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list4Letter.Length);
                     string[] shadowArray = new string[14];
-                    Array.Copy(list4Letter, shadowArray, list4Letter.Length);
+                    System.Array.Copy(list4Letter, shadowArray, list4Letter.Length);
                     while (shadowArray[number] == null)
                     {
                         number = rnd.Next(0, shadowArray.Length);
@@ -300,13 +300,13 @@ namespace CrosswordSolver
                     string saveBeforeDeleting = shadowArray[number];
                     shadowArray[number] = null;
                     return saveBeforeDeleting;
-                } else
+                } 
                 if (a == 5)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list5Letter.Length);
                     string[] shadowArray = new string[7];
-                    Array.Copy(list5Letter, shadowArray, list5Letter.Length);
+                    System.Array.Copy(list5Letter, shadowArray, list5Letter.Length);
                     while (shadowArray[number] == null)
                     {
                         number = rnd.Next(0, shadowArray.Length);
@@ -314,13 +314,13 @@ namespace CrosswordSolver
                     string saveBeforeDeleting = shadowArray[number];
                     shadowArray[number] = null;
                     return saveBeforeDeleting;
-                } else
+                } 
                 if (a == 6)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list6Letter.Length);
                     string[] shadowArray = new string[16];
-                    Array.Copy(list6Letter, shadowArray, list6Letter.Length);
+                    System.Array.Copy(list6Letter, shadowArray, list6Letter.Length);
                     while (shadowArray[number] == null)
                     {
                         number = rnd.Next(0, shadowArray.Length);
@@ -328,13 +328,13 @@ namespace CrosswordSolver
                     string saveBeforeDeleting = shadowArray[number];
                     shadowArray[number] = null;
                     return saveBeforeDeleting;
-                } else
+                } 
                 if (a == 7)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list7Letter.Length);
                     string[] shadowArray = new string[10];
-                    Array.Copy(list7Letter, shadowArray, list7Letter.Length);
+                    System.Array.Copy(list7Letter, shadowArray, list7Letter.Length);
                     while (shadowArray[number] == null)
                     {
                         number = rnd.Next(0, shadowArray.Length);
@@ -342,13 +342,13 @@ namespace CrosswordSolver
                     string saveBeforeDeleting = shadowArray[number];
                     shadowArray[number] = null;
                     return saveBeforeDeleting;
-                } else
+                } 
                 if (a == 8)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list8Letter.Length);
                     string[] shadowArray = new string[6];
-                    Array.Copy(list8Letter, shadowArray, list8Letter.Length);
+                    System.Array.Copy(list8Letter, shadowArray, list8Letter.Length);
                     while (shadowArray[number] == null)
                     {
                         number = rnd.Next(0, shadowArray.Length);
@@ -356,13 +356,13 @@ namespace CrosswordSolver
                     string saveBeforeDeleting = shadowArray[number];
                     shadowArray[number] = null;
                     return saveBeforeDeleting;
-                } else
+                } 
                 if (a == 9)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list9Letter.Length);
                     string[] shadowArray = new string[2];
-                    Array.Copy(list9Letter, shadowArray, list9Letter.Length);
+                    System.Array.Copy(list9Letter, shadowArray, list9Letter.Length);
                     while (shadowArray[number] == null)
                     {
                         number = rnd.Next(0, shadowArray.Length);
@@ -370,13 +370,13 @@ namespace CrosswordSolver
                     string saveBeforeDeleting = shadowArray[number];
                     shadowArray[number] = null;
                     return saveBeforeDeleting;
-                } else
+                } 
                 if (a == 10)
                 {
                     Random rnd = new Random();
                     int number = rnd.Next(0, list10Letter.Length);
                     string[] shadowArray = new string[2];
-                    Array.Copy(list10Letter, shadowArray, list10Letter.Length);
+                    System.Array.Copy(list10Letter, shadowArray, list10Letter.Length);
                     while (shadowArray[number] == null)
                     {
                         number = rnd.Next(0, shadowArray.Length);
@@ -385,7 +385,7 @@ namespace CrosswordSolver
                     shadowArray[number] = null;
                     return saveBeforeDeleting;
                 }
-                else return "";
+                return "";
             }
             #endregion
 
@@ -658,6 +658,66 @@ namespace CrosswordSolver
             }
             #endregion
 
+            #region [ DeleteWordFromArray ]
+            void DeleteWordFromArray(string[] array, string word)
+            {
+                //                for (int i = 0; i < array.Length; i++)
+                //                {
+                int i = 0;
+                    while(array[i] != null)
+                    { 
+                        if (array[i].Contains(word))
+                        {
+                            array[i] = null;
+                        }
+                        if (i<array.Length-1)
+                        {
+                            i++;
+                        } else { break; }
+                    }
+
+                //                 }
+            }
+            #endregion
+
+            #region [ getTheArray ] - Removes the given word from the list its inside
+            string[] getTheArray(int wordLength)
+            {               
+                if (wordLength == 3)
+                {
+                    return list3Letter;                   
+                }
+                if (wordLength == 4)
+                {
+                    return list4Letter;
+                }
+                if (wordLength == 5)
+                {
+                    return list5Letter;
+                }
+                if (wordLength == 6)
+                {
+                    return list6Letter;
+                }
+                if (wordLength == 7)
+                {
+                    return list7Letter;
+                }
+                if (wordLength == 8)
+                {
+                    return list8Letter;
+                }
+                if (wordLength == 9)
+                {
+                    return list9Letter;
+                }
+                if (wordLength == 10)
+                {
+                    return list10Letter;
+                }
+                return null;
+            }
+            #endregion
 
             System.Threading.Thread.Sleep(solveSpeed);
         #region Auto Solver NEW
@@ -675,10 +735,12 @@ namespace CrosswordSolver
                 // Get horizontal space if theres not a "@" in the following 3 characters
                 int hLength = GetWordSpaceHorizontal(checkX, checkY);
                 // Pick a word according to that Length gotten from the line above
-                string hWord = "AMENITY"; // replace string hWord = PickWord(hLength);
+                string pickedWord = "AMENITY"; // replace string hWord = PickWord(hLength);
                 // Re-write the lineN[] array with the hWord included
                 string restOfTheLine = lineN[checkY].Substring(hLength, 15 - hLength);
-                lineN[checkY] = hWord + restOfTheLine;
+                lineN[checkY] = pickedWord + restOfTheLine;
+                // Delete the used word from the array its in
+                DeleteWordFromArray(getTheArray(hLength), pickedWord);
                 // Assign the re-rewritten word to a variable
                 string asd = lineN[checkY];
                 // Type the hWord to the current x,y
@@ -712,6 +774,7 @@ namespace CrosswordSolver
                     }
                 }
                 TypeVertically(pickedWord);
+                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
@@ -742,6 +805,8 @@ namespace CrosswordSolver
                 // Re-write the lineN[] array with the hWord included
                 string restOfTheLine = lineN[checkY].Substring(hLength, 15 - hLength);
                 lineN[checkY] = pickedWord + restOfTheLine;
+                // Delete the used word from the array its in
+                DeleteWordFromArray(getTheArray(hLength), pickedWord);
                 // Assign the re-rewritten word to a variable
                 string asd = lineN[checkY];
                 // Type the hWord to the current x,y
@@ -777,6 +842,8 @@ namespace CrosswordSolver
                 // Re-write the lineN[] array with the hWord included
                 string restOfTheLine = lineN[checkY].Substring(hLength, 15 - hLength);
                 lineN[checkY] = pickedWord + restOfTheLine;
+                // Delete the used word from the array its in
+                DeleteWordFromArray(getTheArray(hLength), pickedWord);
                 // Assign the re-rewritten word to a variable
                 string asd = lineN[checkY];
                 // Type the hWord to the current x,y
@@ -811,6 +878,8 @@ namespace CrosswordSolver
                 // Re-write the lineN[] array with the hWord included
                 string restOfTheLine = lineN[checkY].Substring(hLength, 15 - hLength);
                 lineN[checkY] = pickedWord + restOfTheLine;
+                // Delete the used word from the array its in
+                DeleteWordFromArray(getTheArray(hLength), pickedWord);
                 // Assign the re-rewritten word to a variable
                 string asd = lineN[checkY];
                 // Type the hWord to the current x,y
@@ -854,6 +923,8 @@ namespace CrosswordSolver
                     if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
                     {
                         TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                         System.Threading.Thread.Sleep(solveSpeed);
                         goto next1;
                     }
@@ -869,6 +940,8 @@ namespace CrosswordSolver
                             if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
                             {
                                 TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                                 System.Threading.Thread.Sleep(solveSpeed);
                                 goto next1;
                             }
@@ -911,6 +984,8 @@ namespace CrosswordSolver
                     if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
                     {
                         TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                         System.Threading.Thread.Sleep(solveSpeed);
                         goto next1;
                     }
@@ -926,6 +1001,8 @@ namespace CrosswordSolver
                             if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
                             {
                                 TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                                 System.Threading.Thread.Sleep(solveSpeed);
                                 goto next2;
                             }
@@ -968,6 +1045,8 @@ namespace CrosswordSolver
                     if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
                     {
                         TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                         System.Threading.Thread.Sleep(solveSpeed);
                         goto next1;
                     }
@@ -983,6 +1062,8 @@ namespace CrosswordSolver
                             if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
                             {
                                 TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                                 System.Threading.Thread.Sleep(solveSpeed);
                                 goto next3;
                             }
@@ -1025,6 +1106,8 @@ namespace CrosswordSolver
                     if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
                     {
                         TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                         System.Threading.Thread.Sleep(solveSpeed);
                         goto next1;
                     }
@@ -1040,6 +1123,8 @@ namespace CrosswordSolver
                             if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
                             {
                                 TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                                 System.Threading.Thread.Sleep(solveSpeed);
                                 goto next4;
                             }
@@ -1085,6 +1170,8 @@ namespace CrosswordSolver
                     if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
                     {
                         TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
                         System.Threading.Thread.Sleep(solveSpeed);
                         goto next5;
                     }
@@ -1101,6 +1188,8 @@ namespace CrosswordSolver
                                 string d1 = lineN[checkY].Substring(0, checkX); // doğru
                                 string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
                                 lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
                                 Console.WriteLine(pickedWord);
                                 System.Threading.Thread.Sleep(solveSpeed);
                                 goto next5;
@@ -1153,6 +1242,8 @@ namespace CrosswordSolver
                         string d1 = lineN[checkY].Substring(0, checkX); // doğru
                         string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
                         lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
                         Console.WriteLine(pickedWord);
                         System.Threading.Thread.Sleep(solveSpeed);
                         goto next6;
@@ -1170,6 +1261,8 @@ namespace CrosswordSolver
                                 string d1 = lineN[checkY].Substring(0, checkX); // doğru
                                 string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
                                 lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
                                 Console.WriteLine(pickedWord);
                                 System.Threading.Thread.Sleep(solveSpeed);
                                 goto next6;
@@ -1207,6 +1300,8 @@ namespace CrosswordSolver
                     }
                 }
                 TypeVertically(pickedWord);
+                // Delete the used word from the array its in
+                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                 System.Threading.Thread.Sleep(solveSpeed);
             }
         #endregion
@@ -1237,6 +1332,8 @@ namespace CrosswordSolver
                 // Re-write the lineN[] array with the hWord included
                 string restOfTheLine = lineN[checkY].Substring(hLength, 15 - hLength);
                 lineN[checkY] = pickedWord + restOfTheLine;
+                // Delete the used word from the array its in
+                DeleteWordFromArray(getTheArray(hLength), pickedWord);
                 // Assign the re-rewritten word to a variable
                 string asd = lineN[checkY];
                 // Type the hWord to the current x,y
@@ -1272,6 +1369,8 @@ namespace CrosswordSolver
                     if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
                     {
                         TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                         System.Threading.Thread.Sleep(solveSpeed);
                         goto next9;
                     }
@@ -1285,6 +1384,8 @@ namespace CrosswordSolver
                             if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
                             {
                                 TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                                 System.Threading.Thread.Sleep(solveSpeed);
                                 goto next9;
                             }
@@ -1323,6 +1424,8 @@ namespace CrosswordSolver
                 // Re-write the lineN[] array with the hWord included
                 string restOfTheLine = lineN[checkY].Substring(hLength, 15 - hLength);
                 lineN[checkY] = pickedWord + restOfTheLine;
+                // Delete the used word from the array its in
+                DeleteWordFromArray(getTheArray(hLength), pickedWord);
                 // Assign the re-rewritten word to a variable
                 string asd = lineN[checkY];
                 // Type the hWord to the current x,y
@@ -1361,6 +1464,8 @@ namespace CrosswordSolver
                         string d1 = lineN[checkY].Substring(0, checkX); // doğru
                         string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
                         lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
                         Console.WriteLine(pickedWord);
                         System.Threading.Thread.Sleep(solveSpeed);
                         goto next11;
@@ -1377,6 +1482,8 @@ namespace CrosswordSolver
                                 string d1 = lineN[checkY].Substring(0, checkX); // doğru
                                 string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
                                 lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
                                 Console.WriteLine(pickedWord);
                                 System.Threading.Thread.Sleep(solveSpeed);
                                 goto next11;
@@ -1397,8 +1504,12 @@ namespace CrosswordSolver
                 Console.SetCursorPosition(checkX, checkY);
 
                 char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
-                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 2);
-                char letter3 = read1Letter(Console.CursorLeft, Console.CursorTop + 3);
+                Console.CursorLeft = 3;
+                Console.CursorTop = 7;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 1);
+                Console.CursorLeft = 3;
+                Console.CursorTop = 7;
+                char letter3 = read1Letter(Console.CursorLeft, Console.CursorTop + 2);
                 // Get vertical space 
                 Console.CursorLeft = 3;
                 Console.CursorTop = 7;
@@ -1415,9 +1526,11 @@ namespace CrosswordSolver
                 int tryN = 0;
                 if (pickedWord != null)
                 {
-                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
                     {
                         TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                         System.Threading.Thread.Sleep(solveSpeed);
                         goto next12;
                     }
@@ -1428,9 +1541,12 @@ namespace CrosswordSolver
                             pickedWord = PickWord(vSpace);
                             let1 = pickedWord.ElementAt(0);
                             let2 = pickedWord.ElementAt(1);
-                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            let3 = pickedWord.ElementAt(2);
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
                             {
                                 TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
                                 System.Threading.Thread.Sleep(solveSpeed);
                                 goto next12;
                             }
@@ -1451,7 +1567,9 @@ namespace CrosswordSolver
                 Console.CursorTop = 10;
                 // read already written 3 letters
                 char letter1 = read1Letter(Console.CursorLeft+1, Console.CursorTop);
-                char letter2 = read1Letter(Console.CursorLeft+1, Console.CursorTop+1);
+                Console.CursorLeft = 1;
+                Console.CursorTop = 10;
+                char letter2 = read1Letter(Console.CursorLeft+2, Console.CursorTop);
                 // Get horizontal space 
                 int hSpace = GetWordSpaceHorizontal(checkX, checkY);
                 // Pick a word according to that Length gotten from the line above           
@@ -1470,6 +1588,8 @@ namespace CrosswordSolver
                         string d1 = lineN[checkY].Substring(0, checkX); // doğru
                         string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
                         lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
                         Console.WriteLine(pickedWord);
                         System.Threading.Thread.Sleep(solveSpeed);
                         goto next13;
@@ -1485,6 +1605,8 @@ namespace CrosswordSolver
                                 string d1 = lineN[checkY].Substring(0, checkX); // doğru
                                 string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
                                 lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
                                 Console.WriteLine(pickedWord);
                                 System.Threading.Thread.Sleep(solveSpeed);
                                 goto next13;
