@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
-using System.Collections.Generic; // do I need this?
+using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 
@@ -13,13 +13,13 @@ namespace CrosswordSolver
             var watch = new System.Diagnostics.Stopwatch();
             watch.Start(); // to calculate the time it took to solve the Puzzle
 
-            Console.SetWindowSize(40, 24);           // Console.SetWindowSize(15, 24);
+            Console.SetWindowSize(40, 24);  // Console.SetWindowSize(15, 24);
             int thisNumberOfTimes = 0; // to calculate how many iterations been done
 
             int checkX = 0; // Karakterleri yerleştirme ve okumada kullanılacak
             int checkY = 0; // Karakterleri yerleştirme ve okumada kullanılacak
 
-            int solveSpeed = 0;
+            int solveSpeed = 0; // Puzzle çözülürken işlemler arasındaki boşta bekleme süresi
 
             // Puzzle Alanını Oluştur 
             #region [ Puzzle Alanı lineN[] ] 
@@ -29,7 +29,7 @@ namespace CrosswordSolver
             Console.WriteLine("++++++@++++++@+");  // 2.  Satır
             Console.WriteLine("+++++++@+++++++");  // 3.  Satır
             Console.WriteLine("++++++@++++++@+");  // 4.  Satır
-            Console.WriteLine("@+@++++@+++++@+");  // 5.  Satır
+            Console.WriteLine("@+@++++@++++++@");  // 5.  Satır
             Console.WriteLine("++++++++@+@++++");  // 6.  Satır
             Console.WriteLine("+@+@+@+++++++++");  // 7.  Satır
             Console.WriteLine("++++@+@+@+@++++");  // 8.  Satır
@@ -46,7 +46,7 @@ namespace CrosswordSolver
             lineN[1] = "++++++@++++++@+"; // 2.  Satır
             lineN[2] = "+++++++@+++++++"; // 3.  Satır
             lineN[3] = "++++++@++++++@+"; // 4.  Satır
-            lineN[4] = "@+@++++@+++++@+"; // 5.  Satır
+            lineN[4] = "@+@++++@++++++@"; // 5.  Satır
             lineN[5] = "++++++++@+@++++"; // 6.  Satır
             lineN[6] = "+@+@+@+++++++++"; // 7.  Satır
             lineN[7] = "++++@+@+@+@++++"; // 8.  Satır
@@ -138,6 +138,7 @@ namespace CrosswordSolver
             list10Letter[1] = "VIRTUOSITY";
             #endregion
 
+            #region [ IsItEmpty ] - Bir string Array'in tamamen boş olup olmadığını bulur
             bool IsItEmpty(string[] myStringArray)
             {
                 int i = 0;
@@ -156,7 +157,7 @@ namespace CrosswordSolver
                 }
                 else return false;              
             }
-          
+            #endregion
 
             #region [ GetWordSpaceHorizontal ] - Bulunulan noktadan sonraki "@" karakterine kadar olan sağa doğru yatay boşluğu hesaplar ve döndürür.
             int GetWordSpaceHorizontal(int checkX, int checkY)
@@ -165,6 +166,7 @@ namespace CrosswordSolver
                 string Line = lineN[checkY];
                 string PartToCheckAfter = Line[checkX..15];
                 int b = PartToCheckAfter.IndexOf("@");
+                if (b == -1) { return (15-checkX); }
                 return b;
             }
             #endregion
@@ -537,7 +539,7 @@ namespace CrosswordSolver
                 Console.WriteLine("++++++@++++++@+");  // 2.  Satır
                 Console.WriteLine("+++++++@+++++++");  // 3.  Satır
                 Console.WriteLine("++++++@++++++@+");  // 4.  Satır
-                Console.WriteLine("@+@++++@+++++@+");  // 5.  Satır
+                Console.WriteLine("@+@++++@++++++@");  // 5.  Satır
                 Console.WriteLine("++++++++@+@++++");  // 6.  Satır
                 Console.WriteLine("+@+@+@+++++++++");  // 7.  Satır
                 Console.WriteLine("++++@+@+@+@++++");  // 8.  Satır
@@ -554,7 +556,7 @@ namespace CrosswordSolver
                 lineN[1] = "++++++@++++++@+"; // 2.  Satır
                 lineN[2] = "+++++++@+++++++"; // 3.  Satır
                 lineN[3] = "++++++@++++++@+"; // 4.  Satır
-                lineN[4] = "@+@++++@+++++@+"; // 5.  Satır
+                lineN[4] = "@+@++++@++++++@"; // 5.  Satır
                 lineN[5] = "++++++++@+@++++"; // 6.  Satır
                 lineN[6] = "+@+@+@+++++++++"; // 7.  Satır
                 lineN[7] = "++++@+@+@+@++++"; // 8.  Satır
@@ -653,7 +655,7 @@ namespace CrosswordSolver
                 Console.SetCursorPosition(checkX, checkY);
                 string Line = lineN[checkY];
                 char readLetter = char.Parse(Line.Substring(checkX, 1));
-                Console.SetCursorPosition(checkX, checkY);               
+                Console.SetCursorPosition(checkX, checkY); // This line is probably unnecessary, should delete          
                 return readLetter; 
             }
             #endregion
@@ -661,22 +663,24 @@ namespace CrosswordSolver
             #region [ DeleteWordFromArray ]
             void DeleteWordFromArray(string[] array, string word)
             {
-                //                for (int i = 0; i < array.Length; i++)
-                //                {
-                int i = 0;
-                    while(array[i] != null)
-                    { 
-                        if (array[i].Contains(word))
-                        {
-                            array[i] = null;
-                        }
-                        if (i<array.Length-1)
-                        {
-                            i++;
-                        } else { break; }
-                    }
 
-                //                 }
+                int i = 0;
+                while(array[i] != null)
+                { 
+                    if (array[i].Contains(word))
+                    {
+                        array[i] = null;
+                    }
+                    if (i<array.Length-1)
+                    {
+                        i++;
+                    } else { break; }
+                }
+                while(array[i] == null && (i+1 != array.Length))
+                {
+                    i++;                  
+                }                           
+
             }
             #endregion
 
@@ -735,30 +739,30 @@ namespace CrosswordSolver
                 // Get horizontal space if theres not a "@" in the following 3 characters
                 int hLength = GetWordSpaceHorizontal(checkX, checkY);
                 // Pick a word according to that Length gotten from the line above
-                string pickedWord = "AMENITY"; // replace string hWord = PickWord(hLength);
+                string hWord = PickWord(hLength);
                 // Re-write the lineN[] array with the hWord included
                 string restOfTheLine = lineN[checkY].Substring(hLength, 15 - hLength);
-                lineN[checkY] = pickedWord + restOfTheLine;
+                lineN[checkY] = hWord + restOfTheLine;
                 // Delete the used word from the array its in
-                DeleteWordFromArray(getTheArray(hLength), pickedWord);
+                DeleteWordFromArray(getTheArray(hLength), hWord);
                 // Assign the re-rewritten word to a variable
                 string asd = lineN[checkY];
                 // Type the hWord to the current x,y
-                Console.WriteLine("AMENITY"); // replace Console.WriteLine(hWord);
+                Console.WriteLine(hWord);
                 checkY++;
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
 
-            #region Check the First Vertical Letter and pick a word that starts with that letter to type with it (Aiming to pick "APER" by chance)
-            {               
+            #region Check the First VERTICAL Letter and pick a word that starts with that letter to type with it (Aiming to pick "APER" by chance)
+            {
                 checkX = 0;
                 checkY = 0; // go to (0, 0)               
                 Console.CursorLeft = checkX;
                 Console.CursorTop = checkY;
                 char letter = read1Letter(Console.CursorLeft, Console.CursorTop);
                 int vSpace = GetWordSpaceVertical(Console.CursorLeft, Console.CursorTop);
-                string pickedWord = "APER"; // replace string pickedWord = PickWord(vSpace);
+                string pickedWord = PickWord(vSpace);
 
                 int tryN = 0;
                 if (pickedWord != "" && pickedWord != null)
@@ -789,7 +793,7 @@ namespace CrosswordSolver
                 // Get horizontal space if theres not a "@" in the following 3 characters
                 int hLength = GetWordSpaceHorizontal(checkX, checkY);
                 // Pick a word according to that Length gotten from the line above
-                string pickedWord = "POMACE"; // replace string pickedWord = PickWord(hLength);
+                string pickedWord = PickWord(hLength);
 
                 int tryN = 0;
                 while ((pickedWord.ElementAt(0) != letter) && tryN < 41)
@@ -826,7 +830,7 @@ namespace CrosswordSolver
                 // Get horizontal space if theres not a "@" in the following 3 characters
                 int hLength = GetWordSpaceHorizontal(checkX, checkY);
                 // Pick a word according to that Length gotten from the line above
-                string pickedWord = "EDITING"; // replace string pickedWord = PickWord(hLength);
+                string pickedWord = PickWord(hLength);
 
                 int tryN = 0;
                 while ((pickedWord.ElementAt(0) != letter) && tryN < 41)
@@ -863,7 +867,7 @@ namespace CrosswordSolver
                 // Get horizontal space if theres not a "@" in the following 3 characters
                 int hLength = GetWordSpaceHorizontal(checkX, checkY);
                 // Pick a word according to that Length gotten from the line above
-                string pickedWord = "RETINA"; // replace string pickedWord = PickWord(hLength);
+                string pickedWord = PickWord(hLength); 
 
                 int tryN = 0;
                 while ((pickedWord.ElementAt(0) != letter) && tryN < 41)
@@ -893,7 +897,7 @@ namespace CrosswordSolver
 
             #region PART [2] START
 
-            #region Check 4 letters Type the vertical word created at (1,0) (aiming to pick "MODERN" by chance) // Done, working
+            #region Check 4 letters Type the VERTICAL word created at (1,0) (aiming to pick "MODERN" by chance) // Done, working
             {
                 checkX = 1;
                 checkY = 0; // go to (1, 0)
@@ -954,7 +958,7 @@ namespace CrosswordSolver
             }
             #endregion 
         next1:
-            #region Check 4 letters Type the vertical word created at (3,0) (aiming to pick "NATIVE" by chance) // Done, working
+            #region Check 4 letters Type the VERTICAL word created at (3,0) (aiming to pick "NATIVE" by chance) // Done, working
             {
                 checkX = 3;
                 checkY = 0; // go to (1, 0)
@@ -1015,7 +1019,7 @@ namespace CrosswordSolver
             }
             #endregion
         next2:
-            #region Check 4 letters Type the vertical word created at (4,0) (aiming to pick "ICINESS" by chance) // Done, working
+            #region Check 4 letters Type the VERTICAL word created at (4,0) (aiming to pick "ICINESS" by chance) // Done, working
             {
                 checkX = 4;
                 checkY = 0; // go to (1, 0)
@@ -1076,7 +1080,7 @@ namespace CrosswordSolver
             }
             #endregion
         next3:
-            #region Check 4 letters Type the vertical word created at (5,0) (aiming to pick "TENANT" by chance) // Done, working
+            #region Check 4 letters Type the VERTICAL word created at (5,0) (aiming to pick "TENANT" by chance) // Done, working
             {
                 checkX = 5;
                 checkY = 0; // go to (1, 0)
@@ -1276,7 +1280,7 @@ namespace CrosswordSolver
             }
             #endregion       
         next6:
-            #region Check the First Vertical Letter at (0,5) and pick a word that starts with that letter to type with it (Aiming to pick "IVORY" by chance) // Done, working
+            #region Check the First VERTICAL Letter at (0,5) and pick a word that starts with that letter to type with it (Aiming to pick "IVORY" by chance) // Done, working
             {
                 checkX = 0;
                 checkY = 5; // go to (0, 5)               
@@ -1343,7 +1347,7 @@ namespace CrosswordSolver
             }
         #endregion
         next8:
-            #region Check 2 letters Type the vertical word created at (2,5) (aiming to pick "VIRTUOSITY" by chance) // Done, working
+            #region Check 2 letters Type the VERTICAL word created at (2,5) (aiming to pick "VIRTUOSITY" by chance) // Done, working
             {
                 checkX = 2;
                 checkY = 5; // go to (2, 5)
@@ -1497,7 +1501,7 @@ namespace CrosswordSolver
             }
         #endregion
         next11:
-            #region Check 3 letters Type the vertical word created at (3,7) (aiming to pick "SURVIVAL" by chance) // Done, working
+            #region Check 3 letters Type the VERTICAL word created at (3,7) (aiming to pick "SURVIVAL" by chance) // Done, working
             {
                 checkX = 3;
                 checkY = 7; // go to (3, 7)
@@ -1600,6 +1604,7 @@ namespace CrosswordSolver
                         {
                             pickedWord = PickWord(hSpace);
                             let1 = pickedWord.ElementAt(1);
+                            let2 = pickedWord.ElementAt(2);
                             if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
                             {
                                 string d1 = lineN[checkY].Substring(0, checkX); // doğru
@@ -1620,8 +1625,2094 @@ namespace CrosswordSolver
             }
             #endregion
         next13:
+            #region Check the (2, 11) 2 letter and type a HORIZONTAL word with it (aiming to pick "SIMOOM" by chance)
+            {
+                checkX = 2;
+                checkY = 11; // go to (1, 10) 
+                Console.CursorLeft = 2;
+                Console.CursorTop = 11;
+                // read already written 3 letters
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 2;
+                Console.CursorTop = 11;
+                char letter2 = read1Letter(Console.CursorLeft + 1, Console.CursorTop);
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 2;
+                Console.CursorTop = 11;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(1);
 
-            #endregion Auto Solver NEW ^^^^^^^^
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next14;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(0);
+                            let2 = pickedWord.ElementAt(1);
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next14;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+            #endregion
+        next14:
+            #region Check 2 letters Type the VERTICAL word created at (4,10) (aiming to pick "EMILE" by chance) // Done, working
+            {
+                checkX = 4;
+                checkY = 10; // go to (4, 10)
+                Console.SetCursorPosition(checkX, checkY);
+
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 4;
+                Console.CursorTop = 10;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 1);
+                Console.CursorLeft = 4;
+                Console.CursorTop = 10;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 4;
+                Console.CursorTop = 10;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(1);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next15;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(0);
+                            let2 = pickedWord.ElementAt(1);
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next15;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+            #endregion
+        next15:
+            #region Check the (0, 14) 2 letter and type a HORIZONTAL word with it (aiming to pick "RAYLESS" by chance)
+            {
+                checkX = 0;
+                checkY = 14; // go to (0, 14) 
+                Console.CursorLeft = 0;
+                Console.CursorTop = 14;
+                // read already written 3 letters
+                char letter1 = read1Letter(Console.CursorLeft + 2, Console.CursorTop);
+                Console.CursorLeft = 0;
+                Console.CursorTop = 14;
+                char letter2 = read1Letter(Console.CursorLeft + 3, Console.CursorTop);
+                Console.CursorLeft = 0;
+                Console.CursorTop = 14;
+                char letter3 = read1Letter(Console.CursorLeft + 4, Console.CursorTop);
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 0;
+                Console.CursorTop = 14;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(2);
+                char let2 = pickedWord.ElementAt(3);
+                char let3 = pickedWord.ElementAt(4);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next16;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(2);
+                            let2 = pickedWord.ElementAt(3);
+                            let3 = pickedWord.ElementAt(4);
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next16;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next16:
+            #region Check the (0, 12) 2 letter and type a HORIZONTAL word with it (aiming to pick "TRIVIAL" by chance)
+            {
+                checkX = 0;
+                checkY = 12; // go to (0, 12) 
+                Console.CursorLeft = 0;
+                Console.CursorTop = 12;
+                // read already written 3 letters
+                char letter1 = read1Letter(Console.CursorLeft + 2, Console.CursorTop);
+                Console.CursorLeft = 0;
+                Console.CursorTop = 12;
+                char letter2 = read1Letter(Console.CursorLeft + 3, Console.CursorTop);
+                Console.CursorLeft = 0;
+                Console.CursorTop = 12;
+                char letter3 = read1Letter(Console.CursorLeft + 4, Console.CursorTop);
+                Console.CursorLeft = 0;
+                Console.CursorTop = 12;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 0;
+                Console.CursorTop = 12;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(2);
+                char let2 = pickedWord.ElementAt(3);
+                char let3 = pickedWord.ElementAt(4);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next17;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(2);
+                            let2 = pickedWord.ElementAt(3);
+                            let3 = pickedWord.ElementAt(4);
+
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next17;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next17:
+            #region Check 2 letter Type the VERTICAL word created at (0,11) (aiming to pick "STIR" by chance) // Done, working
+            {
+                checkX = 0;
+                checkY = 11; // go to (4, 10)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop + 1);
+                Console.CursorLeft = 0;
+                Console.CursorTop = 11;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 3);
+                Console.CursorLeft = 0;
+                Console.CursorTop = 11;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 0;
+                Console.CursorTop = 11;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(1);
+                char let2 = pickedWord.ElementAt(3);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next18;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(1);
+                            let2 = pickedWord.ElementAt(3);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next18;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next18:
+            #region Check 5 letter Type the VERTICAL word created at (5,7) (aiming to pick "UNCLOAKS" by chance) // Done, working
+            {
+                checkX = 5  ;
+                checkY = 7; // go to (5, 7)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop + 1);
+                Console.CursorLeft = 5;
+                Console.CursorTop = 7;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 3);
+                Console.CursorLeft = 5;
+                Console.CursorTop = 7;
+                char letter3 = read1Letter(Console.CursorLeft, Console.CursorTop + 4);
+                Console.CursorLeft = 5;
+                Console.CursorTop = 7;
+                char letter4 = read1Letter(Console.CursorLeft, Console.CursorTop + 5);
+                Console.CursorLeft = 5;
+                Console.CursorTop = 7;
+                char letter5 = read1Letter(Console.CursorLeft, Console.CursorTop + 7);
+                Console.CursorLeft = 5;
+                Console.CursorTop = 7;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 5;
+                Console.CursorTop = 7;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(1);
+                char let2 = pickedWord.ElementAt(3);
+                char let3 = pickedWord.ElementAt(4);
+                char let4 = pickedWord.ElementAt(5);
+                char let5 = pickedWord.ElementAt(7);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4) && (let5 == letter5)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next19;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(1);
+                            let2 = pickedWord.ElementAt(3);
+                            let3 = pickedWord.ElementAt(4);
+                            let4 = pickedWord.ElementAt(5);
+                            let5 = pickedWord.ElementAt(7);
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4) && (let5 == letter5)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next19;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next19:
+            #region Check the (2, 13) 3 letter and type a HORIZONTAL word with it (aiming to pick "TALKER" by chance)
+            {
+                checkX = 2;
+                checkY = 13; // go to (2, 13) 
+                Console.CursorLeft = 2;
+                Console.CursorTop = 13;
+                // read already written 3 letters
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 2;
+                Console.CursorTop = 13;
+                char letter2 = read1Letter(Console.CursorLeft + 1, Console.CursorTop);
+                Console.CursorLeft = 2;
+                Console.CursorTop = 13;
+                char letter3 = read1Letter(Console.CursorLeft + 2, Console.CursorTop);
+                Console.CursorLeft = 2;
+                Console.CursorTop = 13;
+                char letter4 = read1Letter(Console.CursorLeft + 3, Console.CursorTop);
+                Console.CursorLeft = 2;
+                Console.CursorTop = 13;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 2;
+                Console.CursorTop = 13;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(1);
+                char let3 = pickedWord.ElementAt(2);
+                char let4 = pickedWord.ElementAt(3);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next20;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(0);
+                            let2 = pickedWord.ElementAt(1);
+                            let3 = pickedWord.ElementAt(2);
+                            let4 = pickedWord.ElementAt(3);
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next20;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next20:
+            #region Check 2 letter Type the VERTICAL word created at (6,4) (aiming to pick "TOE" by chance) // Done, working
+            {
+                checkX = 6;
+                checkY = 4; // go to (6, 4)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 6;
+                Console.CursorTop = 4;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 1);
+                Console.CursorLeft = 6;
+                Console.CursorTop = 4;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 6;
+                Console.CursorTop = 4;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(1);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next21;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(0);
+                            let2 = pickedWord.ElementAt(1);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next21;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+            #endregion
+        next21:
+            #region Check 2 letter Type the VERTICAL word created at (7,5) (aiming to pick "RAINS" by chance) // Done, working
+            {
+                checkX = 7;
+                checkY = 5; // go to (7, 5)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 7;
+                Console.CursorTop = 5;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 3);
+                Console.CursorLeft = 7;
+                Console.CursorTop = 5;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 7;
+                Console.CursorTop = 5;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(3);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next22;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(0);
+                            let2 = pickedWord.ElementAt(3);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next22;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+            #endregion
+        next22:
+            #region Check the (6, 6) 2 letter and type a HORIZONTAL word with it (aiming to pick "EASTEREGG" by chance) // Done, working
+            {
+                checkX = 6;
+                checkY = 6; // go to (6, 6) 
+                Console.CursorLeft = 6;
+                Console.CursorTop = 6;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 6;
+                Console.CursorTop = 6;
+                char letter2 = read1Letter(Console.CursorLeft + 1, Console.CursorTop);
+                Console.CursorLeft = 6;
+                Console.CursorTop = 6;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 6;
+                Console.CursorTop = 6;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(1);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next23;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(0);
+                            let2 = pickedWord.ElementAt(1);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next23;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+            #endregion
+        next23:
+            #region Check 2 letter Type the VERTICAL word created at (8,8) (aiming to pick "GNU" by chance) // Done, working
+            {
+                checkX = 8;
+                checkY = 8; // go to (8, 8)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 8;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 8;
+                Console.CursorTop = 8;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next24;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(0);
+
+                            if ((let1 == letter1)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next24;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+            #endregion
+        next24:
+            #region Check the (7, 9) 2 letter and type a HORIZONTAL word with it (aiming to pick "SNOWSHOE" by chance) // Done, working
+            {
+                checkX = 7;
+                checkY = 9; // go to (7, 9) 
+                Console.CursorLeft = 7;
+                Console.CursorTop = 9;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 7;
+                Console.CursorTop = 9;
+                char letter2 = read1Letter(Console.CursorLeft + 1, Console.CursorTop);
+                Console.CursorLeft = 7;
+                Console.CursorTop = 9;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 7;
+                Console.CursorTop = 9;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(1);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next25;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(0);
+                            let2 = pickedWord.ElementAt(1);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next25;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+            #endregion
+        next25:
+            #region Check 2 letter Type the VERTICAL word created at (10,8) (aiming to pick "SWOLLEN" by chance) // Done, working
+            {
+                checkX = 10;
+                checkY = 8; // go to (10, 8)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop+1);
+                Console.CursorLeft = 10;
+                Console.CursorTop = 8;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 10;
+                Console.CursorTop = 8;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(1);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next26;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(1);
+
+                            if ((let1 == letter1)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next26;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+            #endregion
+        next26:
+            #region Check the (8, 14) 2 letter and type a HORIZONTAL word with it (aiming to pick "RENTERS" by chance) // Done, working
+            {
+                checkX = 8;
+                checkY = 14; // go to (8, 14) 
+                Console.CursorLeft = 8;
+                Console.CursorTop = 14;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft+2, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 14;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 8;
+                Console.CursorTop = 14;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(2);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next27;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(2);
+
+                            if ((let1 == letter1)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next27;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+            #endregion
+        next27:
+            #region Check the (9, 11) 1 letter and type a HORIZONTAL word with it (aiming to pick "PLOVER" by chance) // Done, working
+            {
+                checkX = 9;
+                checkY = 11; // go to (9, 11) 
+                Console.CursorLeft = 9;
+                Console.CursorTop = 11;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft+1, Console.CursorTop);
+                Console.CursorLeft = 9;
+                Console.CursorTop = 11;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 9;
+                Console.CursorTop = 11;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(1);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next28;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(1);
+
+                            if ((let1 == letter1)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next28;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next28:
+            #region Check 2 letter Type the VERTICAL word created at (11,9) (aiming to pick "SNOCAT" by chance) // Done, working
+            {
+                checkX = 11;
+                checkY = 9; // go to (11, 9)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 11;
+                Console.CursorTop = 9;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 2);
+                Console.CursorLeft = 11;
+                Console.CursorTop = 9;
+                char letter3 = read1Letter(Console.CursorLeft, Console.CursorTop + 5);
+                Console.CursorLeft = 11;
+                Console.CursorTop = 9;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 11;
+                Console.CursorTop = 9;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(2);
+                char let3 = pickedWord.ElementAt(5);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next29;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(1);
+
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next29;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next29:
+            #region Check 1 letter Type the VERTICAL word created at (13,4) (aiming to pick "YOGI" by chance) // Done, working
+            {
+                checkX = 13;
+                checkY = 4; // go to (13, 4)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop+2);
+                Console.CursorLeft = 13;
+                Console.CursorTop = 4;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 13;
+                Console.CursorTop = 4;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(2);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next30;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(2);
+
+                            if ((let1 == letter1)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next30;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next30:
+            #region Check 1 letter Type the VERTICAL word created at (14,5) (aiming to pick "AGREE" by chance) // Done, working
+            {
+                checkX = 14;
+                checkY = 5; // go to (14, 5)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop + 1);
+                Console.CursorLeft = 14;
+                Console.CursorTop = 5;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 4);
+                Console.CursorLeft = 14;
+                Console.CursorTop = 5;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 14;
+                Console.CursorTop = 5;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(1);
+                char let2 = pickedWord.ElementAt(4);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next31;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(1);
+                            let2 = pickedWord.ElementAt(4);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next31;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next31:
+            #region Check the (9, 13) 1 letter and type a HORIZONTAL word with it (aiming to pick "SEALED" by chance) // Done, working
+            {
+                checkX = 9;
+                checkY = 13; // go to (9, 13) 
+                Console.CursorLeft = 9;
+                Console.CursorTop = 13;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft + 1, Console.CursorTop);
+                Console.CursorLeft = 9;
+                Console.CursorTop = 13;
+                char letter2 = read1Letter(Console.CursorLeft + 2, Console.CursorTop);
+                Console.CursorLeft = 9;
+                Console.CursorTop = 13;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 9;
+                Console.CursorTop = 13;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(1);
+                char let2 = pickedWord.ElementAt(2);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next32;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(1);
+                            let2 = pickedWord.ElementAt(2);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next32;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next32:
+            #region Check the (8, 12) 1 letter and type a HORIZONTAL word with it (aiming to pick "VOLCANO" by chance) // Done, working
+            {
+                checkX = 8;
+                checkY = 12; // go to (8, 12) 
+                Console.CursorLeft = 8;
+                Console.CursorTop = 12;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft + 2, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 12;
+                char letter2 = read1Letter(Console.CursorLeft + 3, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 12;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 8;
+                Console.CursorTop = 12;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(2);
+                char let2 = pickedWord.ElementAt(3);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next33;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(2);
+                            let2 = pickedWord.ElementAt(3);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next33;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next33:
+            #region Check the (11, 7) 1 letter and type a HORIZONTAL word with it (aiming to pick "PAIR" by chance) // Done, working
+            {
+                checkX = 11;
+                checkY = 7; // go to (11, 7) 
+                Console.CursorLeft = 11;
+                Console.CursorTop = 7;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft + 2, Console.CursorTop);
+                Console.CursorLeft = 11;
+                Console.CursorTop = 7;
+                char letter2 = read1Letter(Console.CursorLeft + 3, Console.CursorTop);
+                Console.CursorLeft = 11;
+                Console.CursorTop = 7;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 11;
+                Console.CursorTop = 7;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(2);
+                char let2 = pickedWord.ElementAt(3);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next34;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(2);
+                            let2 = pickedWord.ElementAt(3);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next34;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next34:
+            #region Check 3 letter Type the VERTICAL word created at (12,0) (aiming to pick "UNDERNEATH" by chance) // Done, working
+            {
+                checkX = 12;
+                checkY = 0; // go to (12, 0)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop + 6);
+                Console.CursorLeft = 12;
+                Console.CursorTop = 0;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 7);
+                Console.CursorLeft = 12;
+                Console.CursorTop = 0;
+                char letter3 = read1Letter(Console.CursorLeft, Console.CursorTop + 9);
+                Console.CursorLeft = 12;
+                Console.CursorTop = 0;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 12;
+                Console.CursorTop = 0;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(5);
+                char let2 = pickedWord.ElementAt(7);
+                char let3 = pickedWord.ElementAt(9);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next35;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(6);
+                            let2 = pickedWord.ElementAt(7);
+                            let3 = pickedWord.ElementAt(9);
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next35;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next35:
+            #region Check the (11, 5) 3 letter and type a HORIZONTAL word with it (aiming to pick "ANOA" by chance) // Done, working
+            {
+                checkX = 11;
+                checkY = 5; // go to (11, 5) 
+                Console.CursorLeft = 11;
+                Console.CursorTop = 5;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft + 1, Console.CursorTop);
+                Console.CursorLeft = 11;
+                Console.CursorTop = 5;
+                char letter2 = read1Letter(Console.CursorLeft + 2, Console.CursorTop);
+                Console.CursorLeft = 11;
+                Console.CursorTop = 5;
+                char letter3 = read1Letter(Console.CursorLeft + 3, Console.CursorTop);
+                Console.CursorLeft = 11;
+                Console.CursorTop = 5;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 11;
+                Console.CursorTop = 5;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(1);
+                char let2 = pickedWord.ElementAt(2);
+                char let3 = pickedWord.ElementAt(3);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next36;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(1);
+                            let2 = pickedWord.ElementAt(2);
+                            let3 = pickedWord.ElementAt(3);
+
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next36;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next36:
+            #region Check 3 letter Type the VERTICAL word created at (11,0) (aiming to pick "PERICARP" by chance) // Done, working
+            {
+                checkX = 11;
+                checkY = 0; // go to (11, 0)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop + 5);
+                Console.CursorLeft = 11;
+                Console.CursorTop = 0;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 6);
+                Console.CursorLeft = 11;
+                Console.CursorTop = 0;
+                char letter3 = read1Letter(Console.CursorLeft, Console.CursorTop + 7);
+                Console.CursorLeft = 11;
+                Console.CursorTop = 0;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 11;
+                Console.CursorTop = 0;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(5);
+                char let2 = pickedWord.ElementAt(6);
+                char let3 = pickedWord.ElementAt(7);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next37;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(5);
+                            let2 = pickedWord.ElementAt(6);
+                            let3 = pickedWord.ElementAt(7);
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next37;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next37:
+            #region Check the (8, 5) 2 letter and type a HORIZONTAL word with it (aiming to pick "GASPUMP" by chance) // Done, working
+            {
+                checkX = 8;
+                checkY = 0; // go to (8, 0) 
+                Console.CursorLeft = 8;
+                Console.CursorTop = 0;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft + 3, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 0;
+                char letter2 = read1Letter(Console.CursorLeft + 4, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 0;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 8;
+                Console.CursorTop = 0;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(3);
+                char let2 = pickedWord.ElementAt(4);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next38;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(3);
+                            let2 = pickedWord.ElementAt(4);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next38;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next38:
+            #region Check the (7, 1) 2 letter and type a HORIZONTAL word with it (aiming to pick "HEMPEN" by chance) // Done, working
+            {
+                checkX = 7;
+                checkY = 1; // go to (7, 1) 
+                Console.CursorLeft = 7;
+                Console.CursorTop = 1;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft + 4, Console.CursorTop);
+                Console.CursorLeft = 7;
+                Console.CursorTop = 1;
+                char letter2 = read1Letter(Console.CursorLeft + 5, Console.CursorTop);
+                Console.CursorLeft = 7;
+                Console.CursorTop = 1;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 7;
+                Console.CursorTop = 1;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(4);
+                char let2 = pickedWord.ElementAt(5);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next39;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(4);
+                            let2 = pickedWord.ElementAt(5);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next39;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next39:
+            #region Check the (8, 2) 2 letter and type a HORIZONTAL word with it (aiming to pick "LOURDES" by chance) // Done, working
+            {
+                checkX = 8;
+                checkY = 2; // go to (8, 2) 
+                Console.CursorLeft = 8;
+                Console.CursorTop = 2;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft + 3, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 2;
+                char letter2 = read1Letter(Console.CursorLeft + 4, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 2;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 8;
+                Console.CursorTop = 2;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(3);
+                char let2 = pickedWord.ElementAt(4);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next40;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(3);
+                            let2 = pickedWord.ElementAt(4);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next40;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next40:
+            #region Check the (7, 3) 2 letter and type a HORIZONTAL word with it (aiming to pick "HEMPEN" by chance) // Done, working
+            {
+                checkX = 7;
+                checkY = 3; // go to (7, 3) 
+                Console.CursorLeft = 7;
+                Console.CursorTop = 3;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft + 4, Console.CursorTop);
+                Console.CursorLeft = 7;
+                Console.CursorTop = 3;
+                char letter2 = read1Letter(Console.CursorLeft + 5, Console.CursorTop);
+                Console.CursorLeft = 7;
+                Console.CursorTop = 3;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 7;
+                Console.CursorTop = 3;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(4);
+                char let2 = pickedWord.ElementAt(5);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next41;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(4);
+                            let2 = pickedWord.ElementAt(5);
+
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next41;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next41:
+            #region Check the (8, 4) 3 letter and type a HORIZONTAL word with it (aiming to pick "DESCRY" by chance) // Done, working
+            {
+                checkX = 8;
+                checkY = 4; // go to (8, 4) 
+                Console.CursorLeft = 8;
+                Console.CursorTop = 4;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft + 3, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 4;
+                char letter2 = read1Letter(Console.CursorLeft + 4, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 4;
+                char letter3 = read1Letter(Console.CursorLeft + 5, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 4;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 8;
+                Console.CursorTop = 4;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(3);
+                char let2 = pickedWord.ElementAt(4);
+                char let3 = pickedWord.ElementAt(5);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next42;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(3);
+                            let2 = pickedWord.ElementAt(4);
+                            let3 = pickedWord.ElementAt(5);
+
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next42;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next42:
+            #region Check 6 letter Type the VERTICAL word created at (9,0) (aiming to pick "AMORETTO" by chance) // Done, working
+            {
+                checkX = 9;
+                checkY = 0; // go to (9, 0)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 9;
+                Console.CursorTop = 0;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 1);
+                Console.CursorLeft = 9;
+                Console.CursorTop = 0;
+                char letter3 = read1Letter(Console.CursorLeft, Console.CursorTop + 2);
+                Console.CursorLeft = 9;
+                Console.CursorTop = 0;
+                char letter4 = read1Letter(Console.CursorLeft, Console.CursorTop + 3);
+                Console.CursorLeft = 9;
+                Console.CursorTop = 0;
+                char letter5 = read1Letter(Console.CursorLeft, Console.CursorTop + 4);
+                Console.CursorLeft = 9;
+                Console.CursorTop = 0;
+                char letter6 = read1Letter(Console.CursorLeft, Console.CursorTop + 6);
+                Console.CursorLeft = 9;
+                Console.CursorTop = 0;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 9;
+                Console.CursorTop = 0;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(1);
+                char let3 = pickedWord.ElementAt(2);
+                char let4 = pickedWord.ElementAt(3);
+                char let5 = pickedWord.ElementAt(4);
+                char let6 = pickedWord.ElementAt(6);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4) && (let5 == letter5) && (let6 == letter6)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next43;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(0);
+                            let2 = pickedWord.ElementAt(1);
+                            let3 = pickedWord.ElementAt(2);
+                            let4 = pickedWord.ElementAt(3);
+                            let5 = pickedWord.ElementAt(4);
+                            let6 = pickedWord.ElementAt(6);
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4) && (let5 == letter5) && (let6 == letter6)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next43;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next43:
+            #region Check the (8, 10) 3 letter and type a HORIZONTAL word with it (aiming to pick "UPON" by chance) // Done, working
+            {
+                checkX = 8;
+                checkY = 10; // go to (8, 10) 
+                Console.CursorLeft = 8;
+                Console.CursorTop = 10;
+                // read already written 2 letters
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 10;
+                char letter2 = read1Letter(Console.CursorLeft + 2, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 10;
+                char letter3 = read1Letter(Console.CursorLeft + 3, Console.CursorTop);
+                Console.CursorLeft = 8;
+                Console.CursorTop = 10;
+                // Get horizontal space 
+                int hSpace = GetWordSpaceHorizontal(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above           
+                Console.CursorLeft = 8;
+                Console.CursorTop = 10;
+                string pickedWord = PickWord(hSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(2);
+                char let3 = pickedWord.ElementAt(3);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                    {
+                        string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                        string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                        lineN[checkY] = d1 + pickedWord + d2;
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                        Console.WriteLine(pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next44;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(hSpace);
+                            let1 = pickedWord.ElementAt(0);
+                            let2 = pickedWord.ElementAt(2);
+                            let3 = pickedWord.ElementAt(3);
+
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3)) // If "correct word" is picked, type it
+                            {
+                                string d1 = lineN[checkY].Substring(0, checkX); // doğru
+                                string d2 = lineN[checkY].Substring(checkX + hSpace, 15 - (checkX + hSpace)); //fix that
+                                lineN[checkY] = d1 + pickedWord + d2;
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(hSpace), pickedWord);
+                                Console.WriteLine(pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next44;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                }
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next44:
+            #region Check 5 letter Type the VERTICAL word created at (13,9) (aiming to pick "OPENER" by chance) // Done, working
+            {
+                checkX = 13;
+                checkY = 9; // go to (13, 9)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 13;
+                Console.CursorTop = 9;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 2);
+                Console.CursorLeft = 13;
+                Console.CursorTop = 9;
+                char letter3 = read1Letter(Console.CursorLeft, Console.CursorTop + 3);
+                Console.CursorLeft = 13;
+                Console.CursorTop = 9;
+                char letter4 = read1Letter(Console.CursorLeft, Console.CursorTop + 4);
+                Console.CursorLeft = 13;
+                Console.CursorTop = 9;
+                char letter5 = read1Letter(Console.CursorLeft, Console.CursorTop + 5);
+                Console.CursorLeft = 13;
+                Console.CursorTop = 9;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 13;
+                Console.CursorTop = 9;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(2);
+                char let3 = pickedWord.ElementAt(3);
+                char let4 = pickedWord.ElementAt(4);
+                char let5 = pickedWord.ElementAt(5);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4) && (let5 == letter5)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next45;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(0);
+                            let2 = pickedWord.ElementAt(2);
+                            let3 = pickedWord.ElementAt(3);
+                            let4 = pickedWord.ElementAt(4);
+                            let5 = pickedWord.ElementAt(5);
+                            if ((let1 == letter1) && (let2 == letter2) && (let3 == letter3) && (let4 == letter4) && (let5 == letter5)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next45;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next45:
+            #region Check 2 letter Type the VERTICAL word created at (14,0) (aiming to pick "PASS" by chance) // Done, working
+            {
+                checkX = 14;
+                checkY = 0; // go to (14, 0)
+                Console.SetCursorPosition(checkX, checkY);
+                char letter1 = read1Letter(Console.CursorLeft, Console.CursorTop);
+                Console.CursorLeft = 14;
+                Console.CursorTop = 0;
+                char letter2 = read1Letter(Console.CursorLeft, Console.CursorTop + 2);
+                Console.CursorLeft = 14;
+                Console.CursorTop = 0;
+                // Get vertical space 
+                int vSpace = GetWordSpaceVertical(checkX, checkY);
+                // Pick a word according to that Length gotten from the line above
+                Console.CursorLeft = 14;
+                Console.CursorTop = 0;
+                string pickedWord = PickWord(vSpace);
+                // Assing the first x letters to the variables below to check after and for a cleaner code
+                char let1 = pickedWord.ElementAt(0);
+                char let2 = pickedWord.ElementAt(2);
+
+                int tryN = 0;
+                if (pickedWord != null)
+                {
+                    if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                    {
+                        TypeVertically(pickedWord);
+                        // Delete the used word from the array its in
+                        DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                        System.Threading.Thread.Sleep(solveSpeed);
+                        goto next46;
+                    }
+                    else // If "correct word" is not picked, pick another word
+                    {
+                        while (tryN < 41)
+                        {
+                            pickedWord = PickWord(vSpace);
+                            let1 = pickedWord.ElementAt(0);
+                            let2 = pickedWord.ElementAt(2);
+                            if ((let1 == letter1) && (let2 == letter2)) // If "correct word" is picked, type it
+                            {
+                                TypeVertically(pickedWord);
+                                // Delete the used word from the array its in
+                                DeleteWordFromArray(getTheArray(vSpace), pickedWord);
+                                System.Threading.Thread.Sleep(solveSpeed);
+                                goto next46;
+                            }
+                            tryN++;
+                        }
+                        goto start;
+                    }
+                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                System.Threading.Thread.Sleep(solveSpeed);
+            }
+        #endregion
+        next46:
+
+
+        #endregion Auto Solver NEW ^^^^^^^^
         exit:
             Console.CursorTop = 16;
             watch.Stop();
