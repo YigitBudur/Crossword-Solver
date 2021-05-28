@@ -10,7 +10,7 @@ namespace CrosswordSolver
     {
         static void Main(string[] args)
         {
-            var watch = new System.Diagnostics.Stopwatch();
+            var watch = new System.Diagnostics.Stopwatch(); // yeni bir saat oluştur
             watch.Start(); // to calculate the time it took to solve the Puzzle
 
             Console.SetWindowSize(40, 24);  // Console.SetWindowSize(15, 24);
@@ -21,10 +21,8 @@ namespace CrosswordSolver
 
             int solveSpeed = 0; // Puzzle çözülürken işlemler arasındaki boşta bekleme süresi
 
-            // Puzzle Alanını Oluştur 
             #region [ Puzzle Alanı lineN[] ] 
             // Puzzle Alanını Oluştur 
-            #region [ Puzzle Alanı lineN[] ] 
             Console.WriteLine("+++++++@+++++++");  // 1.  Satır
             Console.WriteLine("++++++@++++++@+");  // 2.  Satır
             Console.WriteLine("+++++++@+++++++");  // 3.  Satır
@@ -57,8 +55,7 @@ namespace CrosswordSolver
             lineN[12] = "+++++++@+++++++"; // 13. Satır
             lineN[13] = "+@++++++@++++++"; // 14. Satır
             lineN[14] = "+++++++@+++++++"; // 15. Satır 
-            lineN[15] = "@@@@@@@@@@@@@@@"; // block
-            #endregion
+            lineN[15] = "@@@@@@@@@@@@@@@"; // block           
             #endregion
 
             #region [ listXLetter ]
@@ -137,28 +134,7 @@ namespace CrosswordSolver
             list10Letter[0] = "UNDERNEATH";
             list10Letter[1] = "VIRTUOSITY";
             #endregion
-
-            #region [ IsItEmpty ] - Bir string Array'in tamamen boş olup olmadığını bulur
-            bool IsItEmpty(string[] myStringArray)
-            {
-                int i = 0;
-                int emptyArrays = 0;
-                while(i < myStringArray.Length)
-                {
-                    if (myStringArray[i] == null)
-                    {
-                        emptyArrays++;
-                    }
-                    i++;
-                }
-                if (emptyArrays == myStringArray.Length)
-                {
-                    return true;
-                }
-                else return false;              
-            }
-            #endregion
-
+            
             #region [ GetWordSpaceHorizontal ] - Bulunulan noktadan sonraki "@" karakterine kadar olan sağa doğru yatay boşluğu hesaplar ve döndürür.
             int GetWordSpaceHorizontal(int checkX, int checkY)
             {
@@ -227,51 +203,7 @@ namespace CrosswordSolver
                 return "";                
             }
             #endregion
-
-            #region [ TypeVerticallySemi ] - 
-            string TypeVerticallySemi(string Word)
-            {
-                int wordLength = Word.Length;
-                for (int i = 0;    i < wordLength;     i++)
-                {                    
-                    string a = Word.Substring(0 + i, wordLength+1-wordLength);                  
-                    Console.Write(a);
-                    if (i == 0)
-                    {
-                        Console.CursorTop++; Console.CursorLeft--;
-                    }
-                    else { Console.CursorTop++; Console.CursorLeft--; }
-                }
-                return "";
-            }
-            #endregion
-
-            #region [ ReadVertically ] - Returns the word written below the checkX and CheckY 
-            string ReadVertically(int checkX, int checkY)
-            {
-                string readWord = "";
-                Console.SetCursorPosition(checkX, checkY);
-                string Line = lineN[checkY];
-                for (var i = 0; i < 10; i++)
-                {
-                    var v = Line.Substring(checkX, checkX + 1);
-                    if ((Line.Substring(checkX, checkX+1) != "@") && (Line.Substring(checkX, checkX+1) != "+"))
-                    {
-                        
-                        readWord = readWord + Line.Substring(checkX, checkX+1);
-                        Console.SetCursorPosition(checkX, checkY + i);
-                        if (i == 0)
-                        {
-                            Line = lineN[checkY + 1];
-                        }
-                        else Line = lineN[checkY + i + 1];
-                    }
-                    else { return readWord; }
-                }
-                return readWord;
-            }
-            #endregion
-
+                     
             #region [ PickWord ] - int a = karakter sayısı olmak üzere bir kelime döndürür
             string PickWord(int a) // Minimum value is 3 max is 10
             {
@@ -390,141 +322,7 @@ namespace CrosswordSolver
                 return "";
             }
             #endregion
-
-            #region [ CheckWordInOrder ] - int a = karakter sayısı olmak üzere bir kelime döndürür
-            string CheckWordInOrder(int a) // Minimum value is 3 max is 10
-            {
-                if (a == 3)
-                {
-                    int n = 0;
-                    while (list3Letter[n] == "" && n < list3Letter.Length - 1)
-                    {                                              
-                        n++;
-                    }
-                    if (list3Letter[n] == "" && n == list3Letter.Length - 1)
-                    {                      
-                        return "WordNotFound";                       
-                    }
-                    string saveBeforeDeleting = list3Letter[n];
-                    list3Letter[n] = "";
-                    return saveBeforeDeleting;
-                }
-                else
-                if (a == 4)
-                {
-                    int n = 0;
-                    while (list4Letter[n] == "" && n < list4Letter.Length - 1)
-                    {
-                        n++;
-                    }
-                    if (list4Letter[n] == "" && n == list4Letter.Length - 1)
-                    {
-                        return "WordNotFound";
-                    }
-                    string saveBeforeDeleting = list4Letter[n];
-                    list4Letter[n] = "";
-                    return saveBeforeDeleting;
-                }
-                else
-                if (a == 5)
-                {
-                    int n = 0;
-                    while (list5Letter[n] == "" && n < list5Letter.Length - 1)
-                    {
-                        n++;
-                    }
-                    if (list5Letter[n] == "" && n == list5Letter.Length - 1)
-                    {
-                        return "WordNotFound";
-                    }
-                    string saveBeforeDeleting = list5Letter[n];
-                    list5Letter[n] = "";
-                    return saveBeforeDeleting;
-                }
-                else
-                if (a == 6)
-                {
-                    int n = 0;
-                    while (list6Letter[n] == "" && n < list6Letter.Length - 1)
-                    {
-                        n++;
-                    }
-                    if (list6Letter[n] == "" && n == list6Letter.Length - 1)
-                    {
-                        return "WordNotFound";
-                    }
-                    string saveBeforeDeleting = list6Letter[n];
-                    list6Letter[n] = "";
-                    return saveBeforeDeleting;
-                }
-                else
-                if (a == 7)
-                {
-                    int n = 0;
-                    while (list7Letter[n] == "" && n < list7Letter.Length - 1)
-                    {
-                        n++;
-                    }
-                    if (list7Letter[n] == "" && n == list7Letter.Length - 1)
-                    {
-                        return "WordNotFound";
-                    }
-                    string saveBeforeDeleting = list7Letter[n];
-                    list7Letter[n] = "";
-                    return saveBeforeDeleting;
-                }
-                else
-                if (a == 8)
-                {
-                    int n = 0;
-                    while (list8Letter[n] == "" && n < list8Letter.Length - 1)
-                    {
-                        n++;
-                    }
-                    if (list8Letter[n] == "" && n == list8Letter.Length - 1)
-                    {
-                        return "WordNotFound";
-                    }
-                    string saveBeforeDeleting = list8Letter[n];
-                    list8Letter[n] = "";
-                    return saveBeforeDeleting;
-                }
-                else
-                if (a == 9)
-                {
-                    int n = 0;
-                    while (list9Letter[n] == "" && n < list9Letter.Length - 1)
-                    {
-                        n++;
-                    }
-                    if (list9Letter[n] == "" && n == list9Letter.Length - 1)
-                    {
-                        return "WordNotFound";
-                    }
-                    string saveBeforeDeleting = list9Letter[n];
-                    list9Letter[n] = "";
-                    return saveBeforeDeleting;
-                }
-                else
-                if (a == 10)
-                {
-                    int n = 0;
-                    while (list10Letter[n] == "" && n < list10Letter.Length - 1)
-                    {
-                        n++;
-                    }
-                    if (list10Letter[n] == "" && n == list10Letter.Length - 1)
-                    {
-                        return "WordNotFound";
-                    }
-                    string saveBeforeDeleting = list10Letter[n];
-                    list10Letter[n] = "";
-                    return saveBeforeDeleting;
-                }
-                else return "";
-            }
-            #endregion
-
+           
             #region [ Reset Lines & Word Arrays]
             void ResetThePuzzle()
             {
@@ -684,7 +482,7 @@ namespace CrosswordSolver
             }
             #endregion
 
-            #region [ getTheArray ] - Removes the given word from the list its inside
+            #region [ getTheArray ] 
             string[] getTheArray(int wordLength)
             {               
                 if (wordLength == 3)
@@ -724,7 +522,13 @@ namespace CrosswordSolver
             #endregion
 
             System.Threading.Thread.Sleep(solveSpeed);
-        #region Auto Solver NEW
+            Console.WriteLine("Puzzle'ın çözülme hızını giriniz");
+            Console.WriteLine("(0 ile 500 arasında, 0 en hızlı, 500 en yavaş)");
+            Console.WriteLine("Önerilen 50'dir:");
+            int a = Int32.Parse(Console.ReadLine());
+            solveSpeed = a;
+
+        #region Auto Solver
         start:
             ResetThePuzzle();
             Console.SetCursorPosition(0, 0);
@@ -733,7 +537,7 @@ namespace CrosswordSolver
             checkY = Console.CursorTop;
         #region PART [1] START
             
-            #region Type the first word at (0,0)                
+            #region Type the first word at (0,0) aiming to pick "AMENITY" by chance // Done, working              
             if ((Line.Substring(checkX, checkX) != "@") && (Line.Substring(checkX, checkX + 2) != "@"))
             {
                 // Get horizontal space if theres not a "@" in the following 3 characters
@@ -783,7 +587,7 @@ namespace CrosswordSolver
             }
             #endregion
 
-            #region Check the (0, 1) letter and type a HORIZONTAL word with it
+            #region Check the (0, 1) letter and type a HORIZONTAL word with it // aiming to pick "POMACE" by chance // Done, working       
             {
                 checkX = 0;
                 checkY = 1; // go to (0, 1)
@@ -820,7 +624,7 @@ namespace CrosswordSolver
             }
             #endregion
 
-            #region Check the (0, 2) letter and type a HORIZONTAL word with it
+            #region Check the (0, 2) letter and type a HORIZONTAL word with it // aiming to pick "EDITING" by chance // Done, working       
             {
                 checkX = 0;
                 checkY = 2; // go to (0, 2)
@@ -857,7 +661,7 @@ namespace CrosswordSolver
             }
             #endregion
 
-            #region Check the (0, 3) letter and type a HORIZONTAL word with it
+            #region Check the (0, 3) letter and type a HORIZONTAL word with it // aiming to pick "RETINA" by chance // Done, working       
             {
                 checkX = 0;
                 checkY = 3; // go to (0, 3)
@@ -1014,7 +818,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
@@ -1075,7 +879,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
@@ -1136,7 +940,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
@@ -1288,7 +1092,7 @@ namespace CrosswordSolver
                 Console.CursorTop = checkY;
                 char letter = read1Letter(Console.CursorLeft, Console.CursorTop);
                 int vSpace = GetWordSpaceVertical(Console.CursorLeft, Console.CursorTop);
-                string pickedWord = "IVORY"; // replace string pickedWord = PickWord(vSpace);
+                string pickedWord = PickWord(vSpace); 
 
                 int tryN = 0;
                 if (pickedWord != "" && pickedWord != null)
@@ -1320,7 +1124,7 @@ namespace CrosswordSolver
                 // Get horizontal space if theres not a "@" in the following 3 characters
                 int hLength = GetWordSpaceHorizontal(checkX, checkY);
                 // Pick a word according to that Length gotten from the line above
-                string pickedWord = "OARS"; // replace string pickedWord = PickWord(hLength);
+                string pickedWord = PickWord(hLength); 
 
                 int tryN = 0;
                 while ((pickedWord.ElementAt(0) != letter) && tryN < 41)
@@ -1397,7 +1201,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
@@ -1412,7 +1216,7 @@ namespace CrosswordSolver
                 // Get horizontal space if theres not a "@" in the following 3 characters
                 int hLength = GetWordSpaceHorizontal(checkX, checkY);
                 // Pick a word according to that Length gotten from the line above
-                string pickedWord = "YOUR"; // replace string pickedWord = PickWord(hLength);
+                string pickedWord = PickWord(hLength); 
 
                 int tryN = 0;
                 while ((pickedWord.ElementAt(0) != letter) && tryN < 41)
@@ -1442,7 +1246,7 @@ namespace CrosswordSolver
             #region Check the (0, 8) 4 letter and type a HORIZONTAL word with it (aiming to pick "RETURNING" by chance)
             {
                 checkX = 0;
-                checkY = 8; // go to (0, 5) 
+                checkY = 8; // go to (0, 8) 
                 Console.CursorLeft = 0;
                 Console.CursorTop = 8;
                 // read already written 3 letters
@@ -1558,7 +1362,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
@@ -1739,7 +1543,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
@@ -1933,7 +1737,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
         #endregion
@@ -2004,7 +1808,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
         #endregion
@@ -2135,7 +1939,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
@@ -2192,7 +1996,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
@@ -2309,7 +2113,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
@@ -2426,7 +2230,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
             #endregion
@@ -2606,7 +2410,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
         #endregion
@@ -2658,7 +2462,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
         #endregion
@@ -2715,7 +2519,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
         #endregion
@@ -2971,7 +2775,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
         #endregion
@@ -3102,12 +2906,12 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
         #endregion
         next37:
-            #region Check the (8, 5) 2 letter and type a HORIZONTAL word with it (aiming to pick "GASPUMP" by chance) // Done, working
+            #region Check the (8, 0) 2 letter and type a HORIZONTAL word with it (aiming to pick "GASPUMP" by chance) // Done, working
             {
                 checkX = 8;
                 checkY = 0; // go to (8, 0) 
@@ -3508,7 +3312,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
         #endregion
@@ -3649,7 +3453,7 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
         #endregion
@@ -3705,15 +3509,16 @@ namespace CrosswordSolver
                         }
                         goto start;
                     }
-                } // else pickedWord = PickWord(vSpace); probably unnecessary?
+                } 
                 System.Threading.Thread.Sleep(solveSpeed);
             }
         #endregion
         next46:
 
 
-        #endregion Auto Solver NEW ^^^^^^^^
+        #endregion Auto Solver
         exit:
+            Console.CursorLeft = 0;
             Console.CursorTop = 16;
             watch.Stop();
             Console.WriteLine($"Puzzle {watch.ElapsedMilliseconds} ms'de ve {thisNumberOfTimes} Denemede Cozuldu.");
@@ -3725,5 +3530,4 @@ namespace CrosswordSolver
 }
 
 #endregion
-
 // Yiğit Budur (120444012) Bilgi Üniversitesi
